@@ -23,7 +23,7 @@ jobs:
       - run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git pull --rebase origin master
           git add data/stock.json
           git commit -m "update stock" || echo "no changes"
+          git pull --rebase origin master
           git push
