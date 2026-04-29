@@ -1,0 +1,56 @@
+[
+  {
+    "updated": "2026-04-29T06:21:23.489346+00:00",
+    "stock": [
+      {
+        "name": "Pain",
+        "price": 2300000,
+        "robux": 2200,
+        "rarity": "Legendary",
+        "type": "Natural"
+      },
+      {
+        "name": "Phoenix",
+        "price": 1800000,
+        "robux": 2000,
+        "rarity": "Legendary",
+        "type": "Beast"
+      },
+      {
+        "name": "Dark",
+        "price": 500000,
+        "robux": 950,
+        "rarity": "Uncommon",
+        "type": "Elemental"
+      },
+      {
+        "name": "Sand",
+        "price": 420000,
+        "robux": 850,
+        "rarity": "Uncommon",
+        "type": "Elemental"
+      },
+      {
+        "name": "Blade",
+        "price": 30000,
+        "robux": 100,
+        "rarity": "Common",
+        "type": "Natural"
+      },
+      {
+        "name": "Spin",
+        "price": 7500,
+        "robux": 75,
+        "rarity": "Common",
+        "type": "Natural"
+      },
+      {
+        "name": "Rocket",
+        "price": 5000,
+        "robux": 50,
+        "rarity": "Common",
+        "type": "Natural"
+      }
+    ]
+  }
+]

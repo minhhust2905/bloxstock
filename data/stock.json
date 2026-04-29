@@ -1,38 +1,38 @@
 {
-  "updated": "2026-04-29T03:20:01.482530+00:00",
+  "updated": "2026-04-29T06:21:23.489346+00:00",
   "stock": [
     {
-      "name": "Rubber",
-      "price": 750000,
-      "robux": 1200,
-      "rarity": "Rare",
+      "name": "Pain",
+      "price": 2300000,
+      "robux": 2200,
+      "rarity": "Legendary",
       "type": "Natural"
     },
     {
-      "name": "Light",
-      "price": 650000,
-      "robux": 1100,
-      "rarity": "Rare",
+      "name": "Phoenix",
+      "price": 1800000,
+      "robux": 2000,
+      "rarity": "Legendary",
+      "type": "Beast"
+    },
+    {
+      "name": "Dark",
+      "price": 500000,
+      "robux": 950,
+      "rarity": "Uncommon",
       "type": "Elemental"
     },
     {
-      "name": "Smoke",
-      "price": 100000,
-      "robux": 250,
-      "rarity": "Common",
+      "name": "Sand",
+      "price": 420000,
+      "robux": 850,
+      "rarity": "Uncommon",
       "type": "Elemental"
     },
     {
-      "name": "Bomb",
-      "price": 80000,
-      "robux": 220,
-      "rarity": "Common",
-      "type": "Natural"
-    },
-    {
-      "name": "Spring",
-      "price": 60000,
-      "robux": 180,
+      "name": "Blade",
+      "price": 30000,
+      "robux": 100,
       "rarity": "Common",
       "type": "Natural"
     },
