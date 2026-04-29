@@ -2,14 +2,25 @@ import requests
 import json
 import os
 import re
+import time
+import random
 from datetime import datetime, timezone
 
-API = "https://blox-fruits.fandom.com/api.php"
-PARAMS = {
-    "action": "parse",
-    "page": 'Blox Fruits "Stock"',
-    "prop": "wikitext",
-    "format": "json"
+# --- CONFIG ---
+WIKI_API = "https://blox-fruits.fandom.com/api.php"
+GAMERSBERG_API = "https://www.gamersberg.com/api/v1/blox-fruits/stock"
+
+STEALTH_HEADERS = {
+    "accept": "*/*",
+    "accept-language": "vi,en-US;q=0.9,en;q=0.8",
+    "referer": "https://www.gamersberg.com/blox-fruits/stock",
+    "sec-ch-ua": '"Google Chrome";v="147", "Not.A/Brand";v="8", "Chromium";v="147"',
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": '"Windows"',
+    "sec-fetch-dest": "empty",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-site": "same-origin",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36"
 }
 
 FRUITS = {
@@ -56,67 +67,109 @@ FRUITS = {
     "Dragon":   {"price": 15000000, "robux": 5000, "rarity": "Mythical",  "type": "Beast"},
 }
 
-def scrape():
-    r = requests.get(API, params=PARAMS, timeout=10)
+def get_wiki_stock():
+    print("--- Phân tích Wiki (Fallback) ---")
+    params = {"action": "parse", "page": 'Blox Fruits "Stock"', "prop": "wikitext", "format": "json"}
+    r = requests.get(WIKI_API, params=params, timeout=10)
     wikitext = r.json()["parse"]["wikitext"]["*"]
-
-
-    # DEBUG: in ra 500 ký tự đầu để xem format
-    print("=== WIKITEXT SAMPLE ===")
-    print(wikitext[:500])
-    print("=== END ===")
-
     match = re.search(r"^\s*\|Current\s*=\s*(.+)", wikitext, re.MULTILINE)
-    if not match:
-        print("Không tìm thấy stock!")
+    if not match: return None
+    names = [n.strip() for n in match.group(1).split(",")]
+    for perm in ["Rocket", "Spin"]:
+        if perm not in names: names.append(perm)
+    return names
+
+def process_fruit_names(raw_names):
+    fruits = []
+    for name in raw_names:
+        # Làm sạch tên: "Rocket-Rocket" -> "Rocket", "Rocket Fruit" -> "Rocket"
+        clean_name = name.split("-")[0].replace(" Fruit", "").strip()
+        info = FRUITS.get(clean_name)
+        if info:
+            fruits.append({"name": clean_name, **info})
+        else:
+            fruits.append({"name": clean_name, "price": 0, "robux": 0, "rarity": "Unknown", "type": "Unknown"})
+    
+    # Sắp xếp theo độ hiếm
+    rarity_order = {"Mythical": 5, "Legendary": 4, "Rare": 3, "Uncommon": 2, "Common": 1}
+    fruits.sort(key=lambda x: (rarity_order.get(x["rarity"], 0), x["price"]), reverse=True)
+    return fruits
+
+def scrape():
+    # --- Stealth Delay ---
+    delay = random.randint(3, 10)
+    print(f"Chờ {delay} giây...")
+    time.sleep(delay)
+
+    normal_names = []
+    mirage_names = []
+    source = "Wiki"
+
+    # --- Ưu tiên Gamersberg API ---
+    try:
+        print("--- Thử lấy dữ liệu từ Gamersberg API ---")
+        r = requests.get(GAMERSBERG_API, headers=STEALTH_HEADERS, timeout=15)
+        if r.status_code == 200:
+            data = r.json()
+            if data.get("success") is True and data.get("data"):
+                # Cấu trúc thật: data[0]["normalStock"]
+                hub = data["data"][0]
+                normal_names = [item["name"] for item in hub.get("normalStock", [])]
+                mirage_names = [item["name"] for item in hub.get("mirageStock", [])]
+                source = "Gamersberg"
+                print("Thành công: Lấy dữ liệu từ Gamersberg")
+        else:
+            print(f"Thất bại: Gamersberg trả về lỗi {r.status_code}")
+    except Exception as e:
+        print(f"Lỗi khi gọi Gamersberg: {e}")
+
+    # --- Fallback sang Wiki ---
+    if not normal_names:
+        try:
+            normal_names = get_wiki_stock()
+            if normal_names:
+                print("Thành công: Lấy dữ liệu từ Wiki (Fallback)")
+        except Exception as e:
+            print(f"Lỗi khi gọi Wiki: {e}")
+
+    if not normal_names:
+        print("CRITICAL: Không lấy được dữ liệu!")
         return
 
-    names = [n.strip() for n in match.group(1).split(",")]
-    
-    # Rocket và Spin luôn có trong stock
-    for perm in ["Rocket", "Spin"]:
-        if perm not in names:
-            names.append(perm)
-
-    fruits = []
-    for name in names:
-        info = FRUITS.get(name)
-        if info:
-            fruits.append({"name": name, **info})
-        else:
-            fruits.append({"name": name, "price": 0, "robux": 0, "rarity": "Unknown", "type": "Unknown"})
-
-    fruits.sort(key=lambda x: x["price"], reverse=True)
+    # --- Xử lý dữ liệu ---
+    normal_fruits = process_fruit_names(normal_names)
+    mirage_fruits = process_fruit_names(mirage_names) if mirage_names else []
 
     now_iso = datetime.now(timezone.utc).isoformat()
-
     out = {
-        "updated": now_iso,
-        "stock": fruits
+        "updated": now_iso, 
+        "stock": normal_fruits, 
+        "mirageStock": mirage_fruits,
+        "source": source
     }
 
+    # Lưu dữ liệu
     with open("data/stock.json", "w") as f:
         json.dump(out, f, indent=2)
 
-    # ─── Lưu lịch sử ───
+    # Lưu lịch sử (chỉ lưu stock thường)
     history_path = "data/history.json"
     if os.path.exists(history_path):
-        with open(history_path, "r") as f:
-            history = json.load(f)
+        with open(history_path, "r") as f: history = json.load(f)
     else:
         history = []
 
-    # Kiểm tra nếu stock mới khác với lần cuối thì mới lưu
-    if not history or history[-1]["stock"] != fruits:
-        history.append({"updated": now_iso, "stock": fruits})
-        # Giữ tối đa 200 entries (~33 ngày)
+    current_names = sorted([f["name"] for f in normal_fruits])
+    last_names = sorted([f["name"] for f in history[-1]["stock"]]) if history else []
+
+    if current_names != last_names:
+        history.append({"updated": now_iso, "stock": normal_fruits})
         history = history[-200:]
         with open(history_path, "w") as f:
             json.dump(history, f, indent=2)
-        print(f"Đã lưu lịch sử: {len(history)} entries")
-    else:
-        print("Stock không thay đổi, bỏ qua lưu lịch sử.")
+        print(f"Đã lưu lịch sử mới")
 
-    print(f"Done: {[f['name'] for f in fruits]}")
+    print(f"Xong! (Source: {source}, Mirage Fruits: {len(mirage_fruits)})")
 
-scrape()
+if __name__ == "__main__":
+    scrape()

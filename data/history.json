@@ -92,5 +92,45 @@
         "type": "Natural"
       }
     ]
+  },
+  {
+    "updated": "2026-04-29T16:58:12.929438+00:00",
+    "stock": [
+      {
+        "name": "Flame",
+        "price": 250000,
+        "robux": 550,
+        "rarity": "Uncommon",
+        "type": "Elemental"
+      },
+      {
+        "name": "Spike",
+        "price": 180000,
+        "robux": 380,
+        "rarity": "Common",
+        "type": "Natural"
+      },
+      {
+        "name": "Blade",
+        "price": 30000,
+        "robux": 100,
+        "rarity": "Common",
+        "type": "Natural"
+      },
+      {
+        "name": "Spin",
+        "price": 7500,
+        "robux": 75,
+        "rarity": "Common",
+        "type": "Natural"
+      },
+      {
+        "name": "Rocket",
+        "price": 5000,
+        "robux": 50,
+        "rarity": "Common",
+        "type": "Natural"
+      }
+    ]
   }
 ]

@@ -377,6 +377,29 @@
         .is-restocking .countdown-label { opacity: 0.5; }
 
         .play-btn { color: #60a5fa; }
+        /* ─── MIRAGE SECTION ─── */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin: 2.5rem 0 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .section-header h2 { font-size: 1.5rem; font-weight: 800; }
+        .section-header .badge {
+            background: linear-gradient(135deg, #60a5fa, #c084fc);
+            font-size: 0.65rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .mirage-card {
+            border-color: rgba(96, 165, 250, 0.2) !important;
+            background: linear-gradient(180deg, rgba(96, 165, 250, 0.05) 0%, rgba(0,0,0,0) 100%) !important;
+        }
+
         .price-label { font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
         .price-val { font-size: 0.9rem; font-weight: 700; }
         .beli { color: #4ade80; }
@@ -599,12 +622,13 @@
 
 <!-- Tab navigation with ARIA -->
 <div class="tabs" role="tablist" aria-label="Stock views">
-    <button class="tab-btn active" data-tab="stock" role="tab" aria-selected="true" aria-controls="tab-stock" id="btn-stock">📦 Current Stock</button>
+    <button class="tab-btn active" data-tab="stock" role="tab" aria-selected="true" aria-controls="tab-stock" id="btn-stock">📦 Normal</button>
+    <button id="btn-mirage" class="tab-btn" data-tab="mirage" role="tab" aria-selected="false" aria-controls="tab-mirage">🌌 Mirage</button>
     <button class="tab-btn" data-tab="history" role="tab" aria-selected="false" aria-controls="tab-history" id="btn-history">📜 History</button>
 </div>
 
 <main class="container">
-    <!-- STOCK TAB -->
+    <!-- NORMAL STOCK TAB -->
     <div id="tab-stock" class="tab-panel active" role="tabpanel" aria-labelledby="btn-stock">
         <div id="skeleton" class="skeleton-grid">
             <!-- Skeleton cards -->
@@ -614,6 +638,19 @@
             <div class="skeleton-card"><div class="sk sk-badge"></div><div class="sk sk-img"></div><div class="sk sk-name"></div><div class="sk sk-type"></div><div class="sk-prices"><div class="sk sk-price"></div><div class="sk sk-price"></div></div></div>
         </div>
         <div id="stock-grid" class="stock-grid" style="display:none;"></div>
+    </div>
+
+    <!-- MIRAGE STOCK TAB -->
+    <div id="tab-mirage" class="tab-panel" role="tabpanel" aria-labelledby="btn-mirage">
+        <div class="section-header" style="margin-top:0;">
+            <h2>Mirage Stock</h2>
+            <span class="badge">Limited Shop</span>
+        </div>
+        <div id="mirage-grid" class="stock-grid">
+            <div style="text-align:center;padding:4rem 2rem;color:var(--muted);grid-column:1/-1;">
+                Mirage Island is currently hidden...
+            </div>
+        </div>
     </div>
 
     <!-- HISTORY TAB -->
@@ -798,6 +835,41 @@
             grid.appendChild(frag);
             document.getElementById('skeleton').style.display = 'none';
             grid.style.display = 'grid';
+
+            // Render Mirage Stock
+            const mirageGrid = document.getElementById('mirage-grid');
+            if (data.mirageStock && data.mirageStock.length > 0) {
+                mirageGrid.innerHTML = '';
+                const mFrag = document.createDocumentFragment();
+                data.mirageStock.forEach((f, idx) => {
+                    const rc = RC[f.rarity.toLowerCase()] || '';
+                    const card = document.createElement('div');
+                    card.className = `card mirage-card ${rc}`;
+                    card.style.animationDelay = `${idx * 0.05}s`;
+                    
+                    const beli = new Intl.NumberFormat('en-US').format(f.price);
+                    const robux = new Intl.NumberFormat('en-US').format(f.robux);
+                    
+                    card.innerHTML = `
+                        <span class="rarity-badge">${f.rarity}</span>
+                        <div class="fruit-img-wrap">
+                            <img class="fruit-img" src="assets/fruits/${f.name}.webp" alt="${f.name}" width="140" height="140" loading="lazy" decoding="async" onerror="this.style.opacity=0.3">
+                        </div>
+                        <div class="fruit-name">${f.name}</div>
+                        <div class="fruit-type">${f.type}</div>
+                        <div class="prices">
+                            <div class="price-box"><span class="price-label">Beli</span><span class="price-val beli">${beli}</span></div>
+                            <div class="price-box"><span class="price-label">Robux</span><span class="price-val robux">${robux}</span></div>
+                        </div>
+                    `;
+                    mFrag.appendChild(card);
+                });
+                mirageGrid.appendChild(mFrag);
+                document.getElementById('btn-mirage').style.display = 'flex';
+            } else {
+                mirageGrid.innerHTML = `<div style="text-align:center;padding:4rem 2rem;color:var(--muted);grid-column:1/-1;">Mirage Island is currently hidden...</div>`;
+                document.getElementById('btn-mirage').style.display = 'none';
+            }
         } catch(e) {
             console.error(e);
         }
