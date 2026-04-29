@@ -71,6 +71,11 @@ def scrape():
         return
 
     names = [n.strip() for n in match.group(1).split(",")]
+    
+    # Rocket và Spin luôn có trong stock
+    for perm in ["Rocket", "Spin"]:
+        if perm not in names:
+            names.append(perm)
     fruits = []
     for name in names:
         info = FRUITS.get(name)

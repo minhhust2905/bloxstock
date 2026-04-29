@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BFStock - Blox Fruits Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #05070a;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --accent-color: #3b82f6;
+            
+            /* Rarity Colors */
+            --common: #b1b1b1;
+            --uncommon: #50bb50;
+            --rare: #2e93ff;
+            --legendary: #bb58ff;
+            --mythical: #ff4747;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at 50% 0%, #1e293b 0%, #05070a 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            background: linear-gradient(to bottom, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .update-time {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            display: inline-block;
+        }
+
+        .stock-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at top right, var(--rarity-color, transparent), transparent 70%);
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        .fruit-img-container {
+            width: 160px;
+            height: 160px;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .fruit-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 0 15px rgba(0,0,0,0.5));
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover .fruit-img {
+            transform: scale(1.1);
+        }
+
+        .rarity-badge {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            font-weight: 800;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            margin-bottom: 0.8rem;
+            color: #fff;
+            background: var(--rarity-color);
+            box-shadow: 0 0 15px var(--rarity-color);
+        }
+
+        .fruit-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .fruit-type {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.2rem;
+        }
+
+        .price-tag {
+            display: flex;
+            gap: 1rem;
+            width: 100%;
+            margin-top: auto;
+        }
+
+        .price-box {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            padding: 0.6rem;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .price-label {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .price-value {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .price-value.beli { color: #50bb50; }
+        .price-value.robux { color: #3b82f6; }
+
+        /* Rarity Classes mapping */
+        .rarity-common { --rarity-color: var(--common); }
+        .rarity-uncommon { --rarity-color: var(--uncommon); }
+        .rarity-rare { --rarity-color: var(--rare); }
+        .rarity-legendary { --rarity-color: var(--legendary); }
+        .rarity-mythical { --rarity-color: var(--mythical); }
+
+        @media (max-width: 600px) {
+            body { padding: 1rem; }
+            h1 { font-size: 2.2rem; }
+            .stock-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>BFStock</h1>
+        <div id="update-time" class="update-time">Đang tải dữ liệu...</div>
+    </header>
+
+    <div id="stock-grid" class="stock-grid">
+        <!-- Cards will be injected here -->
+    </div>
+</div>
+
+<script>
+    async function loadStock() {
+        try {
+            const response = await fetch('data/stock.json');
+            const data = await response.json();
+            
+            // Cập nhật thời gian
+            const updateDate = new Date(data.updated);
+            document.getElementById('update-time').innerText = `Cập nhật lúc: ${updateDate.toLocaleString('vi-VN')}`;
+            
+            const grid = document.getElementById('stock-grid');
+            grid.innerHTML = '';
+
+            data.stock.forEach(fruit => {
+                const rarityClass = `rarity-${fruit.rarity.toLowerCase()}`;
+                const formattedPrice = new Intl.NumberFormat('en-US').format(fruit.price);
+                const formattedRobux = new Intl.NumberFormat('en-US').format(fruit.robux);
+
+                const card = `
+                    <div class="card ${rarityClass}">
+                        <span class="rarity-badge">${fruit.rarity}</span>
+                        <div class="fruit-img-container">
+                            <img src="assets/fruits/${fruit.name}.webp" alt="${fruit.name}" class="fruit-img" onerror="this.src='https://via.placeholder.com/256x256?text=No+Image'">
+                        </div>
+                        <h2 class="fruit-name">${fruit.name}</h2>
+                        <div class="fruit-type">${fruit.type} Type</div>
+                        
+                        <div class="price-tag">
+                            <div class="price-box">
+                                <span class="price-label">Beli</span>
+                                <span class="price-value beli">$${formattedPrice}</span>
+                            </div>
+                            <div class="price-box">
+                                <span class="price-label">Robux</span>
+                                <span class="price-value robux">${formattedRobux}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                grid.innerHTML += card;
+            });
+
+        } catch (error) {
+            console.error('Lỗi khi load stock:', error);
+            document.getElementById('stock-grid').innerHTML = '<p>Không thể tải dữ liệu stock. Vui lòng chạy script Python trước!</p>';
+        }
+    }
+
+    loadStock();
+</script>
+
+</body>
+</html>
