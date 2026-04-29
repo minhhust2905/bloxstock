@@ -166,6 +166,37 @@
             color: var(--muted);
         }
 
+        /* ─── RARITY FILTER ─── */
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+            padding: 0 1rem;
+        }
+        .rf-btn {
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            background: transparent;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .rf-btn:hover { border-color: var(--border-hover); color: #fff; }
+        .rf-btn.active { background: rgba(255,255,255,0.1); border-color: var(--rf-color, #fff); color: var(--rf-color, #fff); box-shadow: 0 0 12px var(--rf-glow, transparent); }
+        
+        .rf-mythical    { --rf-color: var(--mythical); --rf-glow: rgba(248,113,113,0.3); }
+        .rf-legendary   { --rf-color: var(--legendary); --rf-glow: rgba(192,132,252,0.3); }
+        .rf-rare        { --rf-color: var(--rare); --rf-glow: rgba(96,165,250,0.3); }
+        .rf-uncommon    { --rf-color: var(--uncommon); --rf-glow: rgba(74,222,128,0.3); }
+        .rf-common      { --rf-color: var(--common); --rf-glow: rgba(156,163,175,0.3); }
+
         /* ─── TABS ─── */
         .tabs {
             display: flex;
@@ -468,7 +499,7 @@
         </div>
     </div>
 
-    <a href="https://www.roblox.com/games/2753915549/" target="_blank" class="play-btn" id="play-btn"
+    <a href="roblox://experiences/start?placeId=2753915549" class="play-btn" id="play-btn"
        style="background: linear-gradient(135deg, #ef4444, #f97316);">
         <div class="play-btn-icon">
             <img id="play-btn-img" src="" alt="fruit" onerror="this.style.display='none'">
@@ -497,8 +528,16 @@
 
     <!-- HISTORY TAB -->
     <div id="tab-history" class="tab-panel">
+        <div class="filter-container" id="history-filter">
+            <button class="rf-btn active" data-rarity="all">All</button>
+            <button class="rf-btn rf-mythical" data-rarity="mythical">Mythical</button>
+            <button class="rf-btn rf-legendary" data-rarity="legendary">Legendary</button>
+            <button class="rf-btn rf-rare" data-rarity="rare">Rare</button>
+            <button class="rf-btn rf-uncommon" data-rarity="uncommon">Uncommon</button>
+            <button class="rf-btn rf-common" data-rarity="common">Common</button>
+        </div>
         <div id="history-list" class="history-timeline">
-            <div class="pill" style="text-align:center;padding:2rem;">Loading history...</div>
+            <div style="text-align:center;padding:2rem;color:var(--muted);font-size:0.85rem;">Loading history…</div>
         </div>
     </div>
 </div>
@@ -624,7 +663,7 @@
                 name.textContent = f.name;
                 const type = document.createElement('div');
                 type.className = 'fruit-type';
-                type.textContent = f.type + ' Type';
+                type.textContent = f.type;
                 const prices = document.createElement('div');
                 prices.className = 'prices';
                 prices.innerHTML = `<div class="price-box"><span class="price-label">Beli</span><span class="price-val beli">${beli}</span></div><div class="price-box"><span class="price-label">Robux</span><span class="price-val robux">${robux}</span></div>`;
@@ -644,71 +683,109 @@
 
     function timeAgo(date) {
         const seconds = Math.floor((new Date() - date) / 1000);
-        let interval = seconds / 31536000;
-        if (interval > 1) return Math.floor(interval) + " years ago";
-        interval = seconds / 2592000;
-        if (interval > 1) return Math.floor(interval) + " months ago";
-        interval = seconds / 86400;
-        if (interval > 1) return Math.floor(interval) + " days ago";
-        interval = seconds / 3600;
-        if (interval > 1) return Math.floor(interval) + " hours ago";
-        interval = seconds / 60;
-        if (interval > 1) return Math.floor(interval) + " minutes ago";
-        return Math.floor(seconds) + " seconds ago";
+        if (seconds < 60) return seconds + "s ago";
+        let interval = seconds / 3600;
+        if (interval > 1) {
+            if (interval > 24) return Math.floor(interval/24) + "d ago";
+            return Math.floor(interval) + "h ago";
+        }
+        return Math.floor(seconds/60) + "m ago";
     }
 
     // ─── LOAD HISTORY ───
-    let historyLoaded = false;
+    let historyData = [];
+    let historyFilter = new Set(['all']);
+
     async function loadHistory() {
-        if (historyLoaded) return;
+        if (historyData.length > 0) return;
         try {
             const res = await fetch('data/history.json?t=' + Date.now());
-            const data = await res.json();
-            const el = document.getElementById('history-list');
-            el.innerHTML = '';
-            
-            // newest → oldest
-            [...data].reverse().slice(0, 30).forEach(entry => {
-                const d = new Date(entry.updated);
-                
-                // Snap to nearest previous 4-hour UTC mark
-                const snapD = new Date(d);
-                const utcHours = snapD.getUTCHours();
-                const resetHours = Math.floor(utcHours / 4) * 4;
-                snapD.setUTCHours(resetHours, 0, 0, 0);
-
-                // Format: HH:mm - DD/MM
-                const timeStr = snapD.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-                const dateStr = snapD.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' });
-                const relative = timeAgo(d);
-                
-                const bestFruit = entry.stock[0];
-                const dotColor = bestFruit ? (RC[bestFruit.rarity.toLowerCase()] || 'rc-common') : 'rc-common';
-                
-                const fruitsHtml = entry.stock.map(f => {
-                    const rKey = f.rarity.toLowerCase();
-                    const rcClass = RC[rKey] || 'rc-common';
-                    // We can reuse the var(--uncommon), var(--mythical), etc. defined in :root for border color
-                    return `<div class="tl-fruit ${rcClass}" data-name="${f.name}" style="--rc:var(--${rKey})">
-                                <img src="assets/fruits/${f.name}.webp" alt="${f.name}" onerror="this.style.opacity=0.3">
-                            </div>`;
-                }).join('');
-
-                el.innerHTML += `
-                <div class="timeline-item">
-                    <div class="timeline-dot ${dotColor}" style="--rc:var(--${bestFruit ? bestFruit.rarity.toLowerCase() : 'common'})"></div>
-                    <div class="timeline-content">
-                        <div class="timeline-time">🕒 ${timeStr} · ${dateStr} <span style="color:var(--muted);opacity:0.6;margin-left:8px">(${relative})</span></div>
-                        <div class="timeline-fruits">${fruitsHtml}</div>
-                    </div>
-                </div>`;
-            });
-            historyLoaded = true;
+            historyData = await res.json();
+            renderHistory();
         } catch(e) {
             document.getElementById('history-list').innerHTML =
-                '<div class="pill" style="text-align:center;padding:2rem;color:#f87171;">No history yet. Check back after a few stock rotations.</div>';
+                '<div style="text-align:center;padding:2rem;color:#f87171;font-size:0.85rem;">No history yet.</div>';
         }
     }
+
+    function renderHistory() {
+        const el = document.getElementById('history-list');
+        el.innerHTML = '';
+        
+        let items = [...historyData].reverse();
+        
+        if (!historyFilter.has('all')) {
+            items = items.filter(entry => 
+                entry.stock.some(f => historyFilter.has(f.rarity.toLowerCase()))
+            );
+        }
+
+        items.slice(0, 100).forEach(entry => { // Increased slice for multi-filter
+            const d = new Date(entry.updated);
+            const snapD = new Date(d);
+            const resetHours = Math.floor(snapD.getUTCHours() / 4) * 4;
+            snapD.setUTCHours(resetHours, 0, 0, 0);
+
+            const timeStr = snapD.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+            const dateStr = snapD.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' });
+            const relative = timeAgo(d);
+            
+            const bestFruit = entry.stock[0];
+            const dotColor = bestFruit ? (RC[bestFruit.rarity.toLowerCase()] || 'rc-common') : 'rc-common';
+            
+            const fruitsHtml = entry.stock.map(f => {
+                const rKey = f.rarity.toLowerCase();
+                const rcClass = RC[rKey] || 'rc-common';
+                return `<div class="tl-fruit ${rcClass}" data-name="${f.name}" style="--rc:var(--${rKey})">
+                            <img src="assets/fruits/${f.name}.webp" alt="${f.name}" onerror="this.style.opacity=0.3">
+                        </div>`;
+            }).join('');
+
+            el.innerHTML += `
+            <div class="timeline-item">
+                <div class="timeline-dot ${dotColor}" style="--rc:var(--${bestFruit ? bestFruit.rarity.toLowerCase() : 'common'})"></div>
+                <div class="timeline-content">
+                    <div class="timeline-time">🕒 ${timeStr} · ${dateStr} <span style="color:var(--muted);opacity:0.6;margin-left:8px">(${relative})</span></div>
+                    <div class="timeline-fruits">${fruitsHtml}</div>
+                </div>
+            </div>`;
+        });
+
+        if (items.length === 0) {
+            el.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--muted);font-size:0.85rem;">No entries found for selected rarities.</div>';
+        }
+    }
+
+    // History multi-filter events
+    document.querySelectorAll('#history-filter .rf-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const r = btn.dataset.rarity;
+            
+            if (r === 'all') {
+                historyFilter.clear();
+                historyFilter.add('all');
+                document.querySelectorAll('#history-filter .rf-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            } else {
+                historyFilter.delete('all');
+                document.querySelector('#history-filter [data-rarity="all"]').classList.remove('active');
+                
+                if (historyFilter.has(r)) {
+                    historyFilter.delete(r);
+                    btn.classList.remove('active');
+                } else {
+                    historyFilter.add(r);
+                    btn.classList.add('active');
+                }
+                
+                if (historyFilter.size === 0) {
+                    historyFilter.add('all');
+                    document.querySelector('#history-filter [data-rarity="all"]').classList.add('active');
+                }
+            }
+            renderHistory();
+        });
+    });
 
     loadStock();
 </script>
