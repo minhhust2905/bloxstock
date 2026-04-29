@@ -16,6 +16,13 @@
     <meta property="og:description" content="Check which devil fruits are in the Blox Fruits shop right now. Auto-updated every 4 hours.">
     <meta property="og:image" content="https://bfstock.pages.dev/assets/fruits/Dragon.webp">
 
+    <!-- Canonical & Robots -->
+    <link rel="canonical" href="https://bfstock.pages.dev/">
+    <meta name="robots" content="index, follow">
+
+    <!-- Preconnect for Google Fonts (performance) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -340,6 +347,30 @@
             flex-direction: column;
             gap: 0.15rem;
         }
+        .flip-seg { display: flex; flex-direction: column; align-items: center; }
+        .flip-num { font-size: 2.8rem; font-weight: 800; color: #fff; line-height: 1; margin-bottom: 0.2rem; }
+        .flip-unit { font-size: 0.65rem; text-transform: uppercase; color: var(--muted); letter-spacing: 1px; font-weight: 700; }
+        .flip-colon { font-size: 2rem; font-weight: 800; color: rgba(255,255,255,0.2); margin-top: -1.2rem; }
+
+        /* ─── RESTOCKING STATE ─── */
+        #restocking-label {
+            display: none;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--mythical);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            animation: restockPulse 1.5s infinite;
+        }
+        @keyframes restockPulse {
+            0%, 100% { opacity: 1; filter: brightness(1.5) drop-shadow(0 0 10px var(--mythical)); }
+            50% { opacity: 0.4; filter: brightness(1) drop-shadow(0 0 0px transparent); }
+        }
+        .is-restocking .flip-clock { display: none; }
+        .is-restocking #restocking-label { display: block; }
+        .is-restocking .countdown-label { opacity: 0.5; }
+
+        .play-btn { color: #60a5fa; }
         .price-label { font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
         .price-val { font-size: 0.9rem; font-weight: 700; }
         .beli { color: #4ade80; }
@@ -528,8 +559,10 @@
 <header>
     <div class="brand">BF<span>Stock</span></div>
 
-    <div class="countdown-wrap">
+    <!-- Accessible countdown region -->
+    <div class="countdown-wrap" id="countdown-wrap" role="timer" aria-live="polite" aria-label="Time until next stock reset">
         <div class="countdown-label">Resets in</div>
+        <div id="restocking-label" aria-label="New stock is loading">Restocking...</div>
         <div class="flip-clock">
             <div class="flip-seg">
                 <div class="flip-num" id="cd-h">--</div>
@@ -549,22 +582,24 @@
     </div>
 
     <a href="roblox://experiences/start?placeId=2753915549" class="play-btn" id="play-btn"
+       aria-label="Join Blox Fruits game on Roblox"
        style="background: linear-gradient(135deg, #ef4444, #f97316);">
         <div class="play-btn-icon">
-            <img id="play-btn-img" src="" alt="fruit" onerror="this.style.display='none'">
+            <img id="play-btn-img" src="" alt="" width="32" height="32" aria-hidden="true" onerror="this.style.display='none'">
         </div>
         <span class="play-btn-text">Join Blox Fruits</span>
     </a>
 </header>
 
-<div class="tabs">
-    <button class="tab-btn active" data-tab="stock">📦 Current Stock</button>
-    <button class="tab-btn" data-tab="history">📜 History</button>
+<!-- Tab navigation with ARIA -->
+<div class="tabs" role="tablist" aria-label="Stock views">
+    <button class="tab-btn active" data-tab="stock" role="tab" aria-selected="true" aria-controls="tab-stock" id="btn-stock">📦 Current Stock</button>
+    <button class="tab-btn" data-tab="history" role="tab" aria-selected="false" aria-controls="tab-history" id="btn-history">📜 History</button>
 </div>
 
 <div class="container">
     <!-- STOCK TAB -->
-    <div id="tab-stock" class="tab-panel active">
+    <div id="tab-stock" class="tab-panel active" role="tabpanel" aria-labelledby="btn-stock">
         <div id="skeleton" class="skeleton-grid">
             <!-- Skeleton cards -->
             <div class="skeleton-card"><div class="sk sk-badge"></div><div class="sk sk-img"></div><div class="sk sk-name"></div><div class="sk sk-type"></div><div class="sk-prices"><div class="sk sk-price"></div><div class="sk sk-price"></div></div></div>
@@ -576,8 +611,8 @@
     </div>
 
     <!-- HISTORY TAB -->
-    <div id="tab-history" class="tab-panel">
-        <div class="filter-container" id="history-filter">
+    <div id="tab-history" class="tab-panel" role="tabpanel" aria-labelledby="btn-history">
+        <div class="filter-container" id="history-filter" role="group" aria-label="Filter by rarity">
             <button class="rf-btn active" data-rarity="all">All</button>
             <button class="rf-btn rf-mythical" data-rarity="mythical">Mythical</button>
             <button class="rf-btn rf-legendary" data-rarity="legendary">Legendary</button>
@@ -600,9 +635,13 @@
     // ─── TABS ───
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.classList.remove('active');
+                b.setAttribute('aria-selected', 'false');
+            });
             document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
             btn.classList.add('active');
+            btn.setAttribute('aria-selected', 'true');
             document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
             if (btn.dataset.tab === 'history') loadHistory();
         });
@@ -624,6 +663,7 @@
 
     // ─── COUNTDOWN ───
     let lastUpdated = '';
+    window.isWaitingForNewData = false;
 
     function getNextReset() {
         const now = new Date();
@@ -638,16 +678,21 @@
 
     function tickCountdown() {
         const diff = getNextReset() - Date.now();
+        const wrap = document.getElementById('countdown-wrap');
         const urgent = diff < 300000;
         const cdH = document.getElementById('cd-h');
         const cdM = document.getElementById('cd-m');
         const cdS = document.getElementById('cd-s');
 
-        if (diff <= 0) {
-            cdH.textContent = '00'; cdM.textContent = '00'; cdS.textContent = '00';
-            setTimeout(loadStock, 15000);
+        // Force restocking mode if we are waiting for new data or reached zero
+        if (diff <= 0 || window.isWaitingForNewData) {
+            wrap.classList.add('is-restocking');
+            window.isWaitingForNewData = true;
+            if (!window._fastPoll) window._fastPoll = setInterval(loadStock, 15000);
             return;
         }
+        
+        wrap.classList.remove('is-restocking');
         const h = Math.floor(diff / 3600000);
         const m = Math.floor((diff % 3600000) / 60000);
         const s = Math.floor((diff % 60000) / 1000);
@@ -671,7 +716,10 @@
             const res = await fetch('data/stock.json?t=' + Date.now());
             const data = await res.json();
             if (data.updated === lastUpdated) return;
+            
             lastUpdated = data.updated;
+            window.isWaitingForNewData = false; // Data has changed! Stop restocking mode.
+            historyData = []; // Invalidate history cache so next open will re-fetch
 
             // Sort by Rarity Rank first, then Price
             data.stock.sort((a, b) => {
@@ -711,7 +759,11 @@
                 const img = document.createElement('img');
                 img.className = 'fruit-img';
                 img.src = `assets/fruits/${f.name}.webp`;
-                img.alt = f.name;
+                img.alt = `${f.name} devil fruit`;
+                img.width = 140;
+                img.height = 140;
+                img.loading = 'lazy';
+                img.decoding = 'async';
                 img.onerror = function(){ this.style.opacity = 0.3; };
                 imgWrap.appendChild(img);
                 const name = document.createElement('div');
@@ -848,6 +900,23 @@
             renderHistory();
         });
     });
+
+    // ─── INIT ───
+    // If user opens the page within 5 minutes AFTER a reset, immediately poll for new stock
+    (function checkIfJustReset() {
+        const now = new Date();
+        const h = now.getUTCHours();
+        const lastResetH = Math.floor(h / 4) * 4;
+        const lastReset = new Date(now);
+        lastReset.setUTCHours(lastResetH, 0, 0, 0);
+        const msSinceReset = now - lastReset;
+        // If we're within 5 minutes (300000ms) after a reset, start restocking mode immediately
+        if (msSinceReset < 300000) {
+            window.isWaitingForNewData = true;
+            const wrap = document.getElementById('countdown-wrap');
+            if (wrap) wrap.classList.add('is-restocking');
+        }
+    })();
 
     loadStock();
 </script>
