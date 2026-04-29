@@ -246,6 +246,25 @@
             overflow: hidden;
             transition: transform 0.35s cubic-bezier(.175,.885,.32,1.275), border-color 0.3s, box-shadow 0.3s;
             cursor: default;
+            animation: cardAppear 0.5s backwards;
+        }
+        @keyframes cardAppear {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+            transform: skewX(-25deg);
+            animation: shineOnEntry 0.8s forwards;
+            animation-delay: inherit;
+        }
+        @keyframes shineOnEntry {
+            0% { left: -100%; }
+            100% { left: 200%; }
         }
         .card::before {
             content: '';
@@ -641,12 +660,14 @@
             }
 
             const frag = document.createDocumentFragment();
-            data.stock.forEach(f => {
+            data.stock.forEach((f, idx) => {
                 const rc = RC[f.rarity.toLowerCase()] || '';
                 const beli = new Intl.NumberFormat('en-US').format(f.price);
                 const robux = new Intl.NumberFormat('en-US').format(f.robux);
                 const card = document.createElement('div');
                 card.className = `card ${rc}`;
+                card.style.animationDelay = `${idx * 0.05}s`;
+                
                 const badge = document.createElement('span');
                 badge.className = 'rarity-badge';
                 badge.textContent = f.rarity;
