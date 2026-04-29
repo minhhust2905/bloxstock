@@ -559,6 +559,21 @@
         }
     }
 
+    function timeAgo(date) {
+        const seconds = Math.floor((new Date() - date) / 1000);
+        let interval = seconds / 31536000;
+        if (interval > 1) return Math.floor(interval) + " years ago";
+        interval = seconds / 2592000;
+        if (interval > 1) return Math.floor(interval) + " months ago";
+        interval = seconds / 86400;
+        if (interval > 1) return Math.floor(interval) + " days ago";
+        interval = seconds / 3600;
+        if (interval > 1) return Math.floor(interval) + " hours ago";
+        interval = seconds / 60;
+        if (interval > 1) return Math.floor(interval) + " minutes ago";
+        return Math.floor(seconds) + " seconds ago";
+    }
+
     // ─── LOAD HISTORY ───
     let historyLoaded = false;
     async function loadHistory() {
@@ -568,18 +583,31 @@
             const data = await res.json();
             const el = document.getElementById('history-list');
             el.innerHTML = '';
+            
             // newest → oldest
             [...data].reverse().slice(0, 30).forEach(entry => {
                 const d = new Date(entry.updated);
-                const dateStr = d.toLocaleString('en-US');
+                
+                // Snap to nearest previous 4-hour UTC mark
+                const snapD = new Date(d);
+                const utcHours = snapD.getUTCHours();
+                const resetHours = Math.floor(utcHours / 4) * 4;
+                snapD.setUTCHours(resetHours, 0, 0, 0);
+
+                // Format: HH:mm - DD/MM
+                const timeStr = snapD.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+                const dateStr = snapD.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' });
+                const relative = timeAgo(d);
+                
                 const fruits = entry.stock.map(f => {
                     const rc = RC[f.rarity.toLowerCase()] || '';
                     return `<span class="history-tag ${rc}" style="border-color:var(--rc,var(--border))">${f.name}</span>`;
                 }).join('');
+
                 el.innerHTML += `
                 <div class="history-row">
                     <div class="history-meta">
-                        <span class="history-date">🕒 ${dateStr}</span>
+                        <span class="history-date">🕒 ${timeStr} · ${dateStr} <span style="color:var(--muted);opacity:0.6;margin-left:8px">(${relative})</span></span>
                     </div>
                     <div class="history-fruits">${fruits}</div>
                 </div>`;
