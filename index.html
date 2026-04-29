@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Primary Meta -->
     <title>BFStock - Blox Fruits Stock Tracker</title>
-    <meta name="description" content="Theo dõi trái ác quỷ đang bán trong Blox Fruits theo thời gian thực. Cập nhật mỗi 4 tiếng tự động.">
+    <meta name="description" content="Track devil fruits currently on sale in Blox Fruits. Auto-updated every 4 hours.">
     <meta name="theme-color" content="#05070a">
 
     <!-- Open Graph / Discord / Zalo -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://bfstock.pages.dev/">
     <meta property="og:title" content="BFStock - Blox Fruits Stock Tracker">
-    <meta property="og:description" content="Xem ngay trái ác quỷ đang bán trong shop Blox Fruits. Cập nhật tự động mỗi 4 tiếng.">
+    <meta property="og:description" content="Check which devil fruits are in the Blox Fruits shop right now. Auto-updated every 4 hours.">
     <meta property="og:image" content="https://bfstock.pages.dev/assets/fruits/Dragon.webp">
 
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
@@ -54,17 +54,116 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             line-height: 1;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
         .brand span { color: #f87171; -webkit-text-fill-color: #f87171; }
-        .meta-row {
+
+        /* ─── FLIP CLOCK ─── */
+        .countdown-wrap {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             gap: 0.5rem;
-            margin-bottom: 1.2rem;
+            margin-bottom: 1.5rem;
         }
+        .countdown-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--muted);
+        }
+        .flip-clock {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .flip-seg {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .flip-num {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #fff;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -1px;
+            position: relative;
+            overflow: hidden;
+        }
+        .flip-num::after {
+            content: '';
+            position: absolute;
+            left: 0; right: 0;
+            top: 50%;
+            height: 1px;
+            background: rgba(0,0,0,0.3);
+        }
+        .flip-unit {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--muted);
+        }
+        .flip-colon {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: rgba(255,255,255,0.2);
+            margin-bottom: 1.2rem;
+            line-height: 1;
+        }
+        .flip-num.urgent { color: #f87171; border-color: rgba(248,113,113,0.3); background: rgba(248,113,113,0.08); }
+
+        /* ─── PLAY BUTTON ─── */
+        .play-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0;
+            border-radius: 50px;
+            overflow: hidden;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0 28px var(--btn-glow, rgba(239,68,68,0.3));
+        }
+        .play-btn:hover { transform: scale(1.05); box-shadow: 0 0 44px var(--btn-glow, rgba(239,68,68,0.5)); }
+        .play-btn-icon {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.25);
+            flex-shrink: 0;
+        }
+        .play-btn-icon img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 6px rgba(255,255,255,0.3));
+        }
+        .play-btn-text {
+            padding: 0 1.4rem 0 1rem;
+            color: #fff;
+            height: 44px;
+            display: flex;
+            align-items: center;
+        }
+
         .pill {
             font-size: 0.8rem;
             padding: 0.35rem 0.9rem;
@@ -73,29 +172,6 @@
             background: rgba(255,255,255,0.04);
             color: var(--muted);
         }
-        .pill.countdown {
-            color: #fbbf24;
-            background: rgba(251,191,36,0.08);
-            border-color: rgba(251,191,36,0.2);
-            font-weight: 600;
-        }
-        .play-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.55rem 1.6rem;
-            border-radius: 50px;
-            background: linear-gradient(135deg, #ef4444, #f97316);
-            color: #fff;
-            font-weight: 700;
-            font-size: 0.85rem;
-            text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 0 24px rgba(239,68,68,0.25);
-            transition: all 0.3s ease;
-        }
-        .play-btn:hover { transform: scale(1.05); box-shadow: 0 0 36px rgba(239,68,68,0.45); }
 
         /* ─── TABS ─── */
         .tabs {
@@ -268,7 +344,26 @@
         /* ─── RESPONSIVE ─── */
         @media (max-width: 600px) {
             .brand { font-size: 2.5rem; }
-            .container { padding: 0 1rem 3rem; }
+            .container { padding: 0 0.75rem 3rem; }
+            .flip-num { width: 52px; height: 52px; font-size: 1.4rem; }
+            .flip-colon { font-size: 1.4rem; }
+
+            .stock-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+            .card { padding: 1rem 0.75rem; border-radius: 16px; }
+            .fruit-img-wrap { width: 90px; height: 90px; margin-bottom: 0.5rem; }
+            .rarity-badge { font-size: 0.55rem; padding: 0.2rem 0.55rem; margin-bottom: 0.5rem; }
+            .fruit-name { font-size: 1.05rem; }
+            .fruit-type { font-size: 0.7rem; margin-bottom: 0.75rem; }
+            .price-label { font-size: 0.55rem; }
+            .price-val { font-size: 0.8rem; }
+            .price-box { padding: 0.4rem 0.3rem; }
+
+            .skeleton-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+            .skeleton-card { padding: 1rem 0.75rem; border-radius: 16px; }
+            .sk-img { width: 80px; height: 80px; }
         }
     </style>
 </head>
@@ -276,19 +371,39 @@
 
 <header>
     <div class="brand">BF<span>Stock</span></div>
-    <div class="meta-row">
-        <div class="pill" id="update-time">Đang tải...</div>
-        <div class="pill countdown" id="countdown">⏱ --h --m --s</div>
-        <a href="https://www.roblox.com/games/2753915549/" target="_blank" class="play-btn">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8,5.14V19.14L19,12.14Z"/></svg>
-            Play Now
-        </a>
+
+    <div class="countdown-wrap">
+        <div class="countdown-label">Resets in</div>
+        <div class="flip-clock">
+            <div class="flip-seg">
+                <div class="flip-num" id="cd-h">--</div>
+                <div class="flip-unit">hrs</div>
+            </div>
+            <div class="flip-colon">:</div>
+            <div class="flip-seg">
+                <div class="flip-num" id="cd-m">--</div>
+                <div class="flip-unit">min</div>
+            </div>
+            <div class="flip-colon">:</div>
+            <div class="flip-seg">
+                <div class="flip-num" id="cd-s">--</div>
+                <div class="flip-unit">sec</div>
+            </div>
+        </div>
     </div>
+
+    <a href="https://www.roblox.com/games/2753915549/" target="_blank" class="play-btn" id="play-btn"
+       style="background: linear-gradient(135deg, #ef4444, #f97316);">
+        <div class="play-btn-icon">
+            <img id="play-btn-img" src="" alt="fruit" onerror="this.style.display='none'">
+        </div>
+        <span class="play-btn-text">Join Blox Fruits</span>
+    </a>
 </header>
 
 <div class="tabs">
-    <button class="tab-btn active" data-tab="stock">📦 Stock hiện tại</button>
-    <button class="tab-btn" data-tab="history">📜 Lịch sử</button>
+    <button class="tab-btn active" data-tab="stock">📦 Current Stock</button>
+    <button class="tab-btn" data-tab="history">📜 History</button>
 </div>
 
 <div class="container">
@@ -307,14 +422,14 @@
     <!-- HISTORY TAB -->
     <div id="tab-history" class="tab-panel">
         <div id="history-list" class="history-list">
-            <div class="pill" style="text-align:center;padding:2rem;">Đang tải lịch sử...</div>
+            <div class="pill" style="text-align:center;padding:2rem;">Loading history...</div>
         </div>
     </div>
 </div>
 
 <footer>
-    <p>BFStock là công cụ fan-made, không liên kết với Gamer Robot Inc hay Roblox Corporation.</p>
-    <p>Dữ liệu được cập nhật tự động từ <a href="https://blox-fruits.fandom.com/wiki/Blox_Fruits_%22Stock%22" target="_blank">Blox Fruits Wiki</a>.</p>
+    <p>BFStock is a fan-made tool, not affiliated with Gamer Robot Inc. or Roblox Corporation.</p>
+    <p>Data is automatically sourced from <a href="https://blox-fruits.fandom.com/wiki/Blox_Fruits_%22Stock%22" target="_blank">Blox Fruits Wiki</a>.</p>
 </footer>
 
 <script>
@@ -329,10 +444,18 @@
         });
     });
 
-    // ─── RARITY COLOR MAP ───
+    // ─── RARITY CONFIG ───
     const RC = {
         common: 'rc-common', uncommon: 'rc-uncommon',
         rare: 'rc-rare', legendary: 'rc-legendary', mythical: 'rc-mythical'
+    };
+    const RARITY_RANK = { mythical:5, legendary:4, rare:3, uncommon:2, common:1 };
+    const RARITY_COLOR = {
+        mythical:  { bg: 'linear-gradient(135deg, #f87171, #ef4444)', glow: 'rgba(248,113,113,0.4)' },
+        legendary: { bg: 'linear-gradient(135deg, #c084fc, #a855f7)', glow: 'rgba(192,132,252,0.4)' },
+        rare:      { bg: 'linear-gradient(135deg, #60a5fa, #3b82f6)', glow: 'rgba(96,165,250,0.4)'  },
+        uncommon:  { bg: 'linear-gradient(135deg, #4ade80, #22c55e)', glow: 'rgba(74,222,128,0.4)'  },
+        common:    { bg: 'linear-gradient(135deg, #9ca3af, #6b7280)', glow: 'rgba(156,163,175,0.3)' },
     };
 
     // ─── COUNTDOWN ───
@@ -347,19 +470,28 @@
         return next;
     }
 
+    function pad(n) { return String(n).padStart(2, '0'); }
+
     function tickCountdown() {
         const diff = getNextReset() - Date.now();
+        const urgent = diff < 300000;
+        const cdH = document.getElementById('cd-h');
+        const cdM = document.getElementById('cd-m');
+        const cdS = document.getElementById('cd-s');
+
         if (diff <= 0) {
-            document.getElementById('countdown').textContent = '⏱ Đang cập nhật...';
+            cdH.textContent = '00'; cdM.textContent = '00'; cdS.textContent = '00';
             setTimeout(loadStock, 15000);
             return;
         }
         const h = Math.floor(diff / 3600000);
         const m = Math.floor((diff % 3600000) / 60000);
         const s = Math.floor((diff % 60000) / 1000);
-        document.getElementById('countdown').textContent = `⏱ Reset sau ${h}h ${m}m ${s}s`;
+        cdH.textContent = pad(h);
+        cdM.textContent = pad(m);
+        cdS.textContent = pad(s);
+        [cdH, cdM, cdS].forEach(el => el.classList.toggle('urgent', urgent));
 
-        // Smart polling: khi còn <90s thì check mỗi 20s
         if (diff < 90000) {
             if (!window._fastPoll) window._fastPoll = setInterval(loadStock, 20000);
         } else {
@@ -367,6 +499,7 @@
         }
     }
     setInterval(tickCountdown, 1000);
+    tickCountdown();
 
     // ─── LOAD STOCK ───
     async function loadStock() {
@@ -376,37 +509,56 @@
             if (data.updated === lastUpdated) return;
             lastUpdated = data.updated;
 
-            const d = new Date(data.updated);
-            document.getElementById('update-time').textContent = '🕒 ' + d.toLocaleString('vi-VN');
+            // Update play button with top rarity fruit
+            const sorted = [...data.stock].sort((a, b) =>
+                (RARITY_RANK[b.rarity.toLowerCase()] || 0) - (RARITY_RANK[a.rarity.toLowerCase()] || 0)
+            );
+            const top = sorted[0];
+            if (top) {
+                const rKey = top.rarity.toLowerCase();
+                const col = RARITY_COLOR[rKey] || RARITY_COLOR.common;
+                const btn = document.getElementById('play-btn');
+                const img = document.getElementById('play-btn-img');
+                btn.style.background = col.bg;
+                btn.style.setProperty('--btn-glow', col.glow);
+                img.src = `assets/fruits/${top.name}.webp`;
+                img.style.display = '';
+            }
+
+            const frag = document.createDocumentFragment();
+            data.stock.forEach(f => {
+                const rc = RC[f.rarity.toLowerCase()] || '';
+                const beli = new Intl.NumberFormat('en-US').format(f.price);
+                const robux = new Intl.NumberFormat('en-US').format(f.robux);
+                const card = document.createElement('div');
+                card.className = `card ${rc}`;
+                const badge = document.createElement('span');
+                badge.className = 'rarity-badge';
+                badge.textContent = f.rarity;
+                const imgWrap = document.createElement('div');
+                imgWrap.className = 'fruit-img-wrap';
+                const img = document.createElement('img');
+                img.className = 'fruit-img';
+                img.src = `assets/fruits/${f.name}.webp`;
+                img.alt = f.name;
+                img.onerror = function(){ this.style.opacity = 0.3; };
+                imgWrap.appendChild(img);
+                const name = document.createElement('div');
+                name.className = 'fruit-name';
+                name.textContent = f.name;
+                const type = document.createElement('div');
+                type.className = 'fruit-type';
+                type.textContent = f.type + ' Type';
+                const prices = document.createElement('div');
+                prices.className = 'prices';
+                prices.innerHTML = `<div class="price-box"><span class="price-label">Beli</span><span class="price-val beli">${beli}</span></div><div class="price-box"><span class="price-label">Robux</span><span class="price-val robux">${robux}</span></div>`;
+                card.append(badge, imgWrap, name, type, prices);
+                frag.appendChild(card);
+            });
 
             const grid = document.getElementById('stock-grid');
             grid.innerHTML = '';
-            data.stock.forEach(f => {
-                const rc = RC[f.rarity.toLowerCase()] || '';
-                const beli = new Intl.NumberFormat('vi-VN').format(f.price);
-                const robux = new Intl.NumberFormat('en-US').format(f.robux);
-                grid.innerHTML += `
-                <div class="card ${rc}">
-                    <span class="rarity-badge">${f.rarity}</span>
-                    <div class="fruit-img-wrap">
-                        <img class="fruit-img" src="assets/fruits/${f.name}.webp" alt="${f.name}"
-                             onerror="this.style.opacity=0.3">
-                    </div>
-                    <div class="fruit-name">${f.name}</div>
-                    <div class="fruit-type">${f.type} Type</div>
-                    <div class="prices">
-                        <div class="price-box">
-                            <span class="price-label">Beli</span>
-                            <span class="price-val beli">${beli}</span>
-                        </div>
-                        <div class="price-box">
-                            <span class="price-label">Robux</span>
-                            <span class="price-val robux">${robux}</span>
-                        </div>
-                    </div>
-                </div>`;
-            });
-
+            grid.appendChild(frag);
             document.getElementById('skeleton').style.display = 'none';
             grid.style.display = 'grid';
         } catch(e) {
@@ -423,10 +575,10 @@
             const data = await res.json();
             const el = document.getElementById('history-list');
             el.innerHTML = '';
-            // Hiển thị từ mới nhất → cũ nhất
+            // newest → oldest
             [...data].reverse().slice(0, 30).forEach(entry => {
                 const d = new Date(entry.updated);
-                const dateStr = d.toLocaleString('vi-VN');
+                const dateStr = d.toLocaleString('en-US');
                 const fruits = entry.stock.map(f => {
                     const rc = RC[f.rarity.toLowerCase()] || '';
                     return `<span class="history-tag ${rc}" style="border-color:var(--rc,var(--border))">${f.name}</span>`;
@@ -442,7 +594,7 @@
             historyLoaded = true;
         } catch(e) {
             document.getElementById('history-list').innerHTML =
-                '<div class="pill" style="text-align:center;padding:2rem;color:#f87171;">Chưa có dữ liệu lịch sử. Sẽ có sau vài lần cập nhật.</div>';
+                '<div class="pill" style="text-align:center;padding:2rem;color:#f87171;">No history yet. Check back after a few stock rotations.</div>';
         }
     }
 
