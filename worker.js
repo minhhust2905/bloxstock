@@ -20,7 +20,7 @@ const FRUITS_DB = {
   'Smoke':    { robux: 250,  rarity: 'Common',    type: 'Elemental' },
   'Spike':    { robux: 380,  rarity: 'Common',    type: 'Natural'   },
   'Flame':    { robux: 550,  rarity: 'Uncommon',  type: 'Elemental' },
-  'Falcon':   { robux: 650,  rarity: 'Uncommon',  type: 'Beast'     },
+  'Eagle':    { robux: 650,  rarity: 'Uncommon',  type: 'Beast'     },
   'Ice':      { robux: 750,  rarity: 'Uncommon',  type: 'Elemental' },
   'Sand':     { robux: 850,  rarity: 'Uncommon',  type: 'Elemental' },
   'Dark':     { robux: 950,  rarity: 'Uncommon',  type: 'Elemental' },

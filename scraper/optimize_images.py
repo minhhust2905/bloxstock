@@ -7,15 +7,17 @@ TARGET_SIZE = (256, 256)
 def optimize():
     print(f"Bắt đầu tối ưu hóa ảnh trong {SOURCE_DIR}...")
     
-    files = [f for f in os.listdir(SOURCE_DIR) if f.lower().endswith(".png")]
+    # Hỗ trợ cả .png và .webp
+    files = [f for f in os.listdir(SOURCE_DIR) if f.lower().endswith((".png", ".webp"))]
     
     if not files:
-        print("Không tìm thấy file .png nào để tối ưu.")
+        print("Không tìm thấy file ảnh nào để tối ưu.")
         return
 
     for filename in files:
         file_path = os.path.join(SOURCE_DIR, filename)
         name_without_ext = os.path.splitext(filename)[0]
+        temp_path = os.path.join(SOURCE_DIR, f"{name_without_ext}_temp.webp")
         target_path = os.path.join(SOURCE_DIR, f"{name_without_ext}.webp")
         
         try:
@@ -31,14 +33,18 @@ def optimize():
                 offset = ((TARGET_SIZE[0] - img.size[0]) // 2, (TARGET_SIZE[1] - img.size[1]) // 2)
                 final_img.paste(img, offset)
                 
-                # Lưu dưới dạng WebP
-                final_img.save(target_path, "WEBP", quality=90)
+                # Lưu vào file tạm trước
+                final_img.save(temp_path, "WEBP", quality=85)
                 
-            # Xóa file PNG cũ
-            os.remove(file_path)
+            # Xóa file cũ và đổi tên file tạm
+            if os.path.exists(file_path):
+                os.remove(file_path)
+            os.rename(temp_path, target_path)
+            
             print(f"[OK] Đã tối ưu: {filename} -> {name_without_ext}.webp")
             
         except Exception as e:
+            if os.path.exists(temp_path): os.remove(temp_path)
             print(f"[Lỗi] Không thể xử lý {filename}: {e}")
 
     print("\nHoàn tất tối ưu hóa! Toàn bộ ảnh hiện đã là .webp và có kích thước chuẩn 256x256.")
