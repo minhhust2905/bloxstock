@@ -65,6 +65,7 @@ FRUITS = {
     "Gas":      {"price": 8000000,  "robux": 3500, "rarity": "Mythical",  "type": "Elemental"},
     "Kitsune":  {"price": 8000000,  "robux": 4000, "rarity": "Mythical",  "type": "Beast"},
     "Dragon":   {"price": 15000000, "robux": 5000, "rarity": "Mythical",  "type": "Beast"},
+    "Creation": {"price": 1400000,  "robux": 1750, "rarity": "Legendary", "type": "Natural"},
 }
 
 def get_wiki_stock():
@@ -152,22 +153,33 @@ def scrape():
     with open("data/stock.json", "w") as f:
         json.dump(out, f, indent=2)
 
-    # Lưu lịch sử (chỉ lưu stock thường)
+    # Lưu lịch sử (cả stock thường và mirage)
     history_path = "data/history.json"
     if os.path.exists(history_path):
         with open(history_path, "r") as f: history = json.load(f)
     else:
         history = []
+    
+    # So sánh xem có sự thay đổi thực sự không (cả stock thường và mirage)
+    current_normal = sorted([f["name"] for f in normal_fruits])
+    current_mirage = sorted([f["name"] for f in mirage_fruits])
+    
+    last_entry = history[-1] if history else None
+    last_normal = sorted([f["name"] for f in last_entry["stock"]]) if last_entry else []
+    last_mirage = sorted([f["name"] for f in last_entry.get("mirageStock", [])]) if last_entry else []
 
-    current_names = sorted([f["name"] for f in normal_fruits])
-    last_names = sorted([f["name"] for f in history[-1]["stock"]]) if history else []
-
-    if current_names != last_names:
-        history.append({"updated": now_iso, "stock": normal_fruits})
+    if current_normal != last_normal or current_mirage != last_mirage:
+        history.append({
+            "updated": now_iso, 
+            "stock": normal_fruits, 
+            "mirageStock": mirage_fruits
+        })
         history = history[-200:]
         with open(history_path, "w") as f:
             json.dump(history, f, indent=2)
-        print(f"Đã lưu lịch sử mới")
+        print(f"Đã lưu lịch sử mới (Normal + Mirage)")
+    else:
+        print(f"Dữ liệu không đổi, bỏ qua lưu lịch sử.")
 
     print(f"Xong! (Source: {source}, Mirage Fruits: {len(mirage_fruits)})")
 

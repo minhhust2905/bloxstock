@@ -27,8 +27,8 @@
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap"></noscript>
     
     <script>
-        // Start fetching data immediately before body renders to crush LCP times
-        window._initialStockFetch = fetch('data/stock.json?t=' + Math.floor(Date.now() / 60000)).then(r => r.json()).catch(() => null);
+        // Start fetching data immediately from Real-time Worker
+        window._initialStockFetch = fetch('https://bfstock-proxy.minhedward2905.workers.dev').then(r => r.json()).catch(() => null);
     </script>
     <style>
         :root {
@@ -65,6 +65,7 @@
             letter-spacing: -2px;
             background: linear-gradient(135deg, #fff 30%, #64748b);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
             line-height: 1;
             margin-bottom: 1.5rem;
@@ -79,12 +80,14 @@
             gap: 0.5rem;
             margin-bottom: 1.5rem;
         }
-        .countdown-label {
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
+        .countdown-label { 
+            font-size: 0.65rem; 
+            font-weight: 700; 
+            color: var(--muted); 
+            text-transform: uppercase; 
             letter-spacing: 2px;
-            color: var(--muted);
+            margin-bottom: 0.8rem;
+            transition: color 0.3s;
         }
         .flip-clock {
             display: flex;
@@ -353,11 +356,7 @@
             flex-direction: column;
             gap: 0.15rem;
         }
-        .flip-seg { display: flex; flex-direction: column; align-items: center; }
-        .flip-num { font-size: 2.8rem; font-weight: 800; color: #fff; line-height: 1; margin-bottom: 0.2rem; }
-        .flip-unit { font-size: 0.65rem; text-transform: uppercase; color: var(--muted); letter-spacing: 1px; font-weight: 700; }
-        .flip-colon { font-size: 2rem; font-weight: 800; color: rgba(255,255,255,0.2); margin-top: -1.2rem; }
-
+        
         /* ─── RESTOCKING STATE ─── */
         #restocking-label {
             display: none;
@@ -545,6 +544,23 @@
             opacity: 1;
             transform: translateX(-50%) translateY(-2px);
         }
+        
+        .history-mirage-row {
+            margin-top: 1rem;
+            padding-top: 0.8rem;
+            border-top: 1px dashed var(--border);
+        }
+        .hm-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #60a5fa;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.6rem;
+        }
 
         /* ─── FOOTER ─── */
         footer {
@@ -590,7 +606,7 @@
 
     <!-- Accessible countdown region -->
     <div class="countdown-wrap" id="countdown-wrap" role="timer" aria-live="polite" aria-label="Time until next stock reset">
-        <div class="countdown-label">Resets in</div>
+        <div class="countdown-label" id="reset-type-label">Normal Stock Resets In</div>
         <div id="restocking-label" aria-label="New stock is loading">Restocking...</div>
         <div class="flip-clock">
             <div class="flip-seg">
@@ -675,6 +691,8 @@
 </footer>
 
 <script>
+    const API_BASE = 'https://bfstock-proxy.minhedward2905.workers.dev';
+
     // ─── TABS ───
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -686,6 +704,10 @@
             btn.classList.add('active');
             btn.setAttribute('aria-selected', 'true');
             document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+            
+            // Refresh countdown immediately on tab change
+            tickCountdown();
+            
             if (btn.dataset.tab === 'history') loadHistory();
         });
     });
@@ -704,38 +726,60 @@
         common:    { bg: 'linear-gradient(135deg, #9ca3af, #6b7280)', glow: 'rgba(156,163,175,0.3)' },
     };
 
-    // ─── COUNTDOWN ───
+    // ─── COUNTDOWN ENGINE ───
     let lastUpdated = '';
     window.isWaitingForNewData = false;
+    let _hasTriggeredFetch = false; // Chống fetch nhiều lần khi về 0
 
-    function getNextReset() {
+    function getNextNormalReset() {
         const now = new Date();
-        const h = now.getUTCHours();
-        const nextH = Math.ceil((h + 0.001) / 4) * 4;
         const next = new Date(now);
-        next.setUTCHours(nextH, 0, 0, 0);
+        next.setUTCHours(Math.ceil((now.getUTCHours() + 0.0001) / 4) * 4, 0, 0, 0);
         return next;
     }
 
-    function pad(n) { return String(n).padStart(2, '0'); }
+    function getNextMirageReset() {
+        const now = new Date();
+        const next = new Date(now);
+        next.setUTCHours(Math.ceil((now.getUTCHours() + 0.0001) / 2) * 2, 0, 0, 0);
+        return next;
+    }
+
+    function pad(n) { return n.toString().padStart(2, '0'); }
 
     function tickCountdown() {
-        const diff = getNextReset() - Date.now();
+        const activeTab = document.querySelector('.tab-btn.active')?.dataset.tab;
+        const isMirage = activeTab === 'mirage';
+        const nextReset = isMirage ? getNextMirageReset() : getNextNormalReset();
+        const diff = nextReset - Date.now();
+
+        // Cập nhật label
+        const label = document.getElementById('reset-type-label');
+        if (label) {
+            label.innerText = isMirage ? 'Mirage Stock Resets In' : 'Normal Stock Resets In';
+            label.style.color = isMirage ? '#60a5fa' : 'var(--muted)';
+        }
+
         const wrap = document.getElementById('countdown-wrap');
-        const urgent = diff < 300000;
+        const urgent = diff < 300000; // < 5 phút
         const cdH = document.getElementById('cd-h');
         const cdM = document.getElementById('cd-m');
         const cdS = document.getElementById('cd-s');
 
-        // Force restocking mode if we are waiting for new data or reached zero
-        if (diff <= 0 || window.isWaitingForNewData) {
+        // ✅ Khi countdown về 0: Poll thông minh cho đến khi có data mới
+        if (diff <= 0) {
             wrap.classList.add('is-restocking');
             window.isWaitingForNewData = true;
-            if (!window._fastPoll) window._fastPoll = setInterval(loadStock, 15000);
+            if (!_hasTriggeredFetch) {
+                _hasTriggeredFetch = true;
+                console.log('[BFStock] Countdown về 0 → Bắt đầu poll data mới...');
+                waitForNewStock(lastUpdated);
+            }
             return;
         }
-        
+
         wrap.classList.remove('is-restocking');
+        _hasTriggeredFetch = false;
         const h = Math.floor(diff / 3600000);
         const m = Math.floor((diff % 3600000) / 60000);
         const s = Math.floor((diff % 60000) / 1000);
@@ -743,15 +787,40 @@
         cdM.textContent = pad(m);
         cdS.textContent = pad(s);
         [cdH, cdM, cdS].forEach(el => el.classList.toggle('urgent', urgent));
-
-        if (diff < 90000) {
-            if (!window._fastPoll) window._fastPoll = setInterval(loadStock, 20000);
-        } else {
-            if (window._fastPoll) { clearInterval(window._fastPoll); window._fastPoll = null; }
-        }
     }
     setInterval(tickCountdown, 1000);
     tickCountdown();
+
+    // ✅ Safety net: Fetch mỗi 5 phút phòng timer lệch hoặc tab bị ngủ
+    setInterval(() => {
+        console.log('[BFStock] Safety net check...');
+        loadStock();
+    }, 5 * 60 * 1000);
+
+    // ─── SMART POLL ENGINE ───
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+    async function waitForNewStock(oldUpdated) {
+        console.log('[BFStock] Polling... old timestamp:', oldUpdated);
+        for (let i = 0; i < 10; i++) {
+            await sleep(3000); // thử mỗi 3 giây
+            try {
+                const res  = await fetch(API_BASE);
+                const data = await res.json();
+                if (data.updated && data.updated !== oldUpdated) {
+                    console.log(`[BFStock] Data mới sau ${(i+1)*3}s → Render!`);
+                    _hasTriggeredFetch = false;
+                    renderStockData(data);
+                    return;
+                }
+                console.log(`[BFStock] Lần ${i+1}: Chưa có data mới, thử lại...`);
+            } catch(e) { console.error(e); }
+        }
+        // Sau 30 giây vẫn không có data mới → render luôn cái cũ
+        console.warn('[BFStock] Timeout 30s → Render data hiện tại.');
+        _hasTriggeredFetch = false;
+        loadStock();
+    }
 
     // ─── LOAD STOCK ───
     async function loadStock() {
@@ -761,117 +830,102 @@
                 data = await window._initialStockFetch;
                 window._initialStockFetch = null;
             } else {
-                const res = await fetch('data/stock.json?t=' + Date.now());
+                const res = await fetch(API_BASE);
                 data = await res.json();
             }
-            
             if (!data || data.updated === lastUpdated) return;
+            renderStockData(data);
+        } catch(e) { console.error(e); }
+    }
+
+    function renderStockData(data) {
+        if (!data || data.updated === lastUpdated) return;
+
+        lastUpdated = data.updated;
+        window.isWaitingForNewData = false;
+        historyData = []; 
+
+        data.stock.sort((a, b) => {
+            const rA = RARITY_RANK[a.rarity.toLowerCase()] || 0;
+            const rB = RARITY_RANK[b.rarity.toLowerCase()] || 0;
+            if (rB !== rA) return rB - rA;
+            return b.price - a.price;
+        });
+
+        const top = data.stock[0];
+        if (top) {
+            const rKey = top.rarity.toLowerCase();
+            const col = RARITY_COLOR[rKey] || RARITY_COLOR.common;
+            const btn = document.getElementById('play-btn');
+            const img = document.getElementById('play-btn-img');
+            btn.style.background = col.bg;
+            btn.style.setProperty('--btn-glow', col.glow);
+            img.src = `assets/fruits/${top.name}.webp`;
+            img.style.display = '';
+        }
+
+        const frag = document.createDocumentFragment();
+        data.stock.forEach((f, idx) => {
+            const rc = RC[f.rarity.toLowerCase()] || '';
+            const beli = new Intl.NumberFormat('en-US').format(f.price);
+            const robux = new Intl.NumberFormat('en-US').format(f.robux);
+            const card = document.createElement('div');
+            card.className = `card ${rc}`;
+            card.style.animationDelay = `${idx * 0.05}s`;
             
-            lastUpdated = data.updated;
-            window.isWaitingForNewData = false; // Data has changed! Stop restocking mode.
-            historyData = []; // Invalidate history cache so next open will re-fetch
+            card.innerHTML = `
+                <span class="rarity-badge">${f.rarity}</span>
+                <div class="fruit-img-wrap">
+                    <img class="fruit-img" src="assets/fruits/${f.name}.webp" alt="${f.name}" width="140" height="140" loading="${idx < 4 ? 'eager' : 'lazy'}" decoding="async" onerror="this.style.opacity=0.3">
+                </div>
+                <div class="fruit-name">${f.name}</div>
+                <div class="fruit-type">${f.type}</div>
+                <div class="prices">
+                    <div class="price-box"><span class="price-label">Beli</span><span class="price-val beli">${beli}</span></div>
+                    <div class="price-box"><span class="price-label">Robux</span><span class="price-val robux">${robux}</span></div>
+                </div>
+            `;
+            frag.appendChild(card);
+        });
 
-            // Sort by Rarity Rank first, then Price
-            data.stock.sort((a, b) => {
-                const rA = RARITY_RANK[a.rarity.toLowerCase()] || 0;
-                const rB = RARITY_RANK[b.rarity.toLowerCase()] || 0;
-                if (rB !== rA) return rB - rA;
-                return b.price - a.price;
-            });
+        const grid = document.getElementById('stock-grid');
+        grid.innerHTML = '';
+        grid.appendChild(frag);
+        document.getElementById('skeleton').style.display = 'none';
+        grid.style.display = 'grid';
 
-            // Update play button with top rarity fruit
-            const top = data.stock[0];
-            if (top) {
-                const rKey = top.rarity.toLowerCase();
-                const col = RARITY_COLOR[rKey] || RARITY_COLOR.common;
-                const btn = document.getElementById('play-btn');
-                const img = document.getElementById('play-btn-img');
-                btn.style.background = col.bg;
-                btn.style.setProperty('--btn-glow', col.glow);
-                img.src = `assets/fruits/${top.name}.webp`;
-                img.style.display = '';
-            }
-
-            const frag = document.createDocumentFragment();
-            data.stock.forEach((f, idx) => {
+        const mirageGrid = document.getElementById('mirage-grid');
+        if (data.mirageStock && data.mirageStock.length > 0) {
+            mirageGrid.innerHTML = '';
+            const mFrag = document.createDocumentFragment();
+            data.mirageStock.forEach((f, idx) => {
                 const rc = RC[f.rarity.toLowerCase()] || '';
-                const beli = new Intl.NumberFormat('en-US').format(f.price);
-                const robux = new Intl.NumberFormat('en-US').format(f.robux);
                 const card = document.createElement('div');
-                card.className = `card ${rc}`;
+                card.className = `card mirage-card ${rc}`;
                 card.style.animationDelay = `${idx * 0.05}s`;
                 
-                const badge = document.createElement('span');
-                badge.className = 'rarity-badge';
-                badge.textContent = f.rarity;
-                const imgWrap = document.createElement('div');
-                imgWrap.className = 'fruit-img-wrap';
-                const img = document.createElement('img');
-                img.className = 'fruit-img';
-                img.src = `assets/fruits/${f.name}.webp`;
-                img.alt = `${f.name} devil fruit`;
-                img.width = 140;
-                img.height = 140;
-                if (idx === 0) img.setAttribute('fetchpriority', 'high');
-                img.loading = idx < 4 ? 'eager' : 'lazy';
-                img.decoding = 'async';
-                img.onerror = function(){ this.style.opacity = 0.3; };
-                imgWrap.appendChild(img);
-                const name = document.createElement('div');
-                name.className = 'fruit-name';
-                name.textContent = f.name;
-                const type = document.createElement('div');
-                type.className = 'fruit-type';
-                type.textContent = f.type;
-                const prices = document.createElement('div');
-                prices.className = 'prices';
-                prices.innerHTML = `<div class="price-box"><span class="price-label">Beli</span><span class="price-val beli">${beli}</span></div><div class="price-box"><span class="price-label">Robux</span><span class="price-val robux">${robux}</span></div>`;
-                card.append(badge, imgWrap, name, type, prices);
-                frag.appendChild(card);
+                const beli = new Intl.NumberFormat('en-US').format(f.price);
+                const robux = new Intl.NumberFormat('en-US').format(f.robux);
+                
+                card.innerHTML = `
+                    <span class="rarity-badge">${f.rarity}</span>
+                    <div class="fruit-img-wrap">
+                        <img class="fruit-img" src="assets/fruits/${f.name}.webp" alt="${f.name}" width="140" height="140" loading="lazy" decoding="async" onerror="this.style.opacity=0.3">
+                    </div>
+                    <div class="fruit-name">${f.name}</div>
+                    <div class="fruit-type">${f.type}</div>
+                    <div class="prices">
+                        <div class="price-box"><span class="price-label">Beli</span><span class="price-val beli">${beli}</span></div>
+                        <div class="price-box"><span class="price-label">Robux</span><span class="price-val robux">${robux}</span></div>
+                    </div>
+                `;
+                mFrag.appendChild(card);
             });
-
-            const grid = document.getElementById('stock-grid');
-            grid.innerHTML = '';
-            grid.appendChild(frag);
-            document.getElementById('skeleton').style.display = 'none';
-            grid.style.display = 'grid';
-
-            // Render Mirage Stock
-            const mirageGrid = document.getElementById('mirage-grid');
-            if (data.mirageStock && data.mirageStock.length > 0) {
-                mirageGrid.innerHTML = '';
-                const mFrag = document.createDocumentFragment();
-                data.mirageStock.forEach((f, idx) => {
-                    const rc = RC[f.rarity.toLowerCase()] || '';
-                    const card = document.createElement('div');
-                    card.className = `card mirage-card ${rc}`;
-                    card.style.animationDelay = `${idx * 0.05}s`;
-                    
-                    const beli = new Intl.NumberFormat('en-US').format(f.price);
-                    const robux = new Intl.NumberFormat('en-US').format(f.robux);
-                    
-                    card.innerHTML = `
-                        <span class="rarity-badge">${f.rarity}</span>
-                        <div class="fruit-img-wrap">
-                            <img class="fruit-img" src="assets/fruits/${f.name}.webp" alt="${f.name}" width="140" height="140" loading="lazy" decoding="async" onerror="this.style.opacity=0.3">
-                        </div>
-                        <div class="fruit-name">${f.name}</div>
-                        <div class="fruit-type">${f.type}</div>
-                        <div class="prices">
-                            <div class="price-box"><span class="price-label">Beli</span><span class="price-val beli">${beli}</span></div>
-                            <div class="price-box"><span class="price-label">Robux</span><span class="price-val robux">${robux}</span></div>
-                        </div>
-                    `;
-                    mFrag.appendChild(card);
-                });
-                mirageGrid.appendChild(mFrag);
-                document.getElementById('btn-mirage').style.display = 'flex';
-            } else {
-                mirageGrid.innerHTML = `<div style="text-align:center;padding:4rem 2rem;color:var(--muted);grid-column:1/-1;">Mirage Island is currently hidden...</div>`;
-                document.getElementById('btn-mirage').style.display = 'none';
-            }
-        } catch(e) {
-            console.error(e);
+            mirageGrid.appendChild(mFrag);
+            document.getElementById('btn-mirage').style.display = 'flex';
+        } else {
+            mirageGrid.innerHTML = `<div style="text-align:center;padding:4rem 2rem;color:var(--muted);grid-column:1/-1;">Mirage Island is currently hidden...</div>`;
+            document.getElementById('btn-mirage').style.display = 'none';
         }
     }
 
@@ -893,7 +947,7 @@
     async function loadHistory() {
         if (historyData.length > 0) return;
         try {
-            const res = await fetch('data/history.json?t=' + Date.now());
+            const res = await fetch(API_BASE + '/history');
             historyData = await res.json();
             renderHistory();
         } catch(e) {
@@ -905,20 +959,14 @@
     function renderHistory() {
         const el = document.getElementById('history-list');
         el.innerHTML = '';
+        const frag = document.createDocumentFragment();
         
         let items = [...historyData].reverse();
         
-        // Remove batch-level filter to show all resets
-        // if (!historyFilter.has('all')) { ... }
-
         items.slice(0, 100).forEach(entry => {
             const d = new Date(entry.updated);
-            const snapD = new Date(d);
-            const resetHours = Math.floor(snapD.getUTCHours() / 4) * 4;
-            snapD.setUTCHours(resetHours, 0, 0, 0);
-
-            const timeStr = snapD.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-            const dateStr = snapD.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' });
+            const timeStr = d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+            const dateStr = d.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' });
             const relative = timeAgo(d);
             
             const bestFruit = entry.stock[0];
@@ -932,7 +980,7 @@
             }
 
             const fruitsHtml = noMatch 
-                ? `<span style="color:var(--muted);font-size:0.75rem;opacity:0.4;font-style:italic;">No selected rarities in this stock</span>`
+                ? `<span style="color:var(--muted);font-size:0.75rem;opacity:0.4;font-style:italic;">No selected rarities</span>`
                 : fruitsToRender.map(f => {
                     const rKey = f.rarity.toLowerCase();
                     const rcClass = RC[rKey] || 'rc-common';
@@ -941,14 +989,32 @@
                             </div>`;
                 }).join('');
 
-            el.innerHTML += `
-            <div class="timeline-item">
+            let mirageHtml = '';
+            if (entry.mirageStock && entry.mirageStock.length > 0) {
+                const mFruits = entry.mirageStock.map(f => {
+                    const rKey = f.rarity.toLowerCase();
+                    const rcClass = RC[rKey] || 'rc-common';
+                    return `<div class="tl-fruit ${rcClass}" style="width:24px;height:24px;padding:4px;" data-name="${f.name}"><img src="assets/fruits/${f.name}.webp" width="16" height="16"></div>`;
+                }).join('');
+                mirageHtml = `
+                    <div class="history-mirage-row">
+                        <div class="hm-label">🌌 Mirage Dealer</div>
+                        <div class="timeline-fruits" style="gap:0.4rem;">${mFruits}</div>
+                    </div>
+                `;
+            }
+
+            const item = document.createElement('div');
+            item.className = 'timeline-item';
+            item.innerHTML = `
                 <div class="timeline-dot ${dotColor}" style="--rc:var(--${bestFruit ? bestFruit.rarity.toLowerCase() : 'common'})"></div>
                 <div class="timeline-content">
                     <div class="timeline-time">🕒 ${timeStr} · ${dateStr} <span style="color:var(--muted);opacity:0.6;margin-left:8px">(${relative})</span></div>
                     <div class="timeline-fruits">${fruitsHtml}</div>
+                    ${mirageHtml}
                 </div>
-            </div>`;
+            `;
+            frag.appendChild(item);
         });
 
         if (items.length === 0) {

@@ -132,5 +132,45 @@
         "type": "Natural"
       }
     ]
+  },
+  {
+    "updated": "2026-04-30T00:16:42.116485+00:00",
+    "stock": [
+      {
+        "name": "Pain",
+        "price": 2300000,
+        "robux": 2200,
+        "rarity": "Legendary",
+        "type": "Natural"
+      },
+      {
+        "name": "Rubber",
+        "price": 750000,
+        "robux": 1200,
+        "rarity": "Rare",
+        "type": "Natural"
+      },
+      {
+        "name": "Blade",
+        "price": 30000,
+        "robux": 100,
+        "rarity": "Common",
+        "type": "Natural"
+      },
+      {
+        "name": "Spin",
+        "price": 7500,
+        "robux": 75,
+        "rarity": "Common",
+        "type": "Natural"
+      },
+      {
+        "name": "Rocket",
+        "price": 5000,
+        "robux": 50,
+        "rarity": "Common",
+        "type": "Natural"
+      }
+    ]
   }
 ]

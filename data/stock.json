@@ -1,18 +1,18 @@
 {
-  "updated": "2026-04-29T16:58:12.929438+00:00",
+  "updated": "2026-04-30T00:16:42.116485+00:00",
   "stock": [
     {
-      "name": "Flame",
-      "price": 250000,
-      "robux": 550,
-      "rarity": "Uncommon",
-      "type": "Elemental"
+      "name": "Pain",
+      "price": 2300000,
+      "robux": 2200,
+      "rarity": "Legendary",
+      "type": "Natural"
     },
     {
-      "name": "Spike",
-      "price": 180000,
-      "robux": 380,
-      "rarity": "Common",
+      "name": "Rubber",
+      "price": 750000,
+      "robux": 1200,
+      "rarity": "Rare",
       "type": "Natural"
     },
     {
@@ -39,23 +39,30 @@
   ],
   "mirageStock": [
     {
-      "name": "Sand",
-      "price": 420000,
-      "robux": 850,
-      "rarity": "Uncommon",
+      "name": "Quake",
+      "price": 1000000,
+      "robux": 1500,
+      "rarity": "Legendary",
+      "type": "Natural"
+    },
+    {
+      "name": "Light",
+      "price": 650000,
+      "robux": 1100,
+      "rarity": "Rare",
       "type": "Elemental"
     },
     {
-      "name": "Ice",
-      "price": 350000,
-      "robux": 750,
+      "name": "Diamond",
+      "price": 600000,
+      "robux": 1000,
       "rarity": "Uncommon",
-      "type": "Elemental"
+      "type": "Natural"
     },
     {
-      "name": "Flame",
-      "price": 250000,
-      "robux": 550,
+      "name": "Dark",
+      "price": 500000,
+      "robux": 950,
       "rarity": "Uncommon",
       "type": "Elemental"
     },
@@ -79,13 +86,6 @@
       "robux": 50,
       "rarity": "Common",
       "type": "Natural"
-    },
-    {
-      "name": "Creation",
-      "price": 0,
-      "robux": 0,
-      "rarity": "Unknown",
-      "type": "Unknown"
     }
   ],
   "source": "Gamersberg"
