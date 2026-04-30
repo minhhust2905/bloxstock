@@ -134,7 +134,44 @@
     ]
   },
   {
+<<<<<<< HEAD
     "updated": "2026-04-30T00:16:42.116485+00:00",
+=======
+    "updated": "2026-04-29T21:12:56.363999+00:00",
+    "stock": [
+      {
+        "name": "Love",
+        "price": 1300000,
+        "robux": 1700,
+        "rarity": "Legendary",
+        "type": "Natural"
+      },
+      {
+        "name": "Blade",
+        "price": 30000,
+        "robux": 100,
+        "rarity": "Common",
+        "type": "Natural"
+      },
+      {
+        "name": "Spin",
+        "price": 7500,
+        "robux": 75,
+        "rarity": "Common",
+        "type": "Natural"
+      },
+      {
+        "name": "Rocket",
+        "price": 5000,
+        "robux": 50,
+        "rarity": "Common",
+        "type": "Natural"
+      }
+    ]
+  },
+  {
+    "updated": "2026-04-30T03:44:08.652567+00:00",
+>>>>>>> bba82624276ef40b6b88b367b482a09a834f9471
     "stock": [
       {
         "name": "Pain",

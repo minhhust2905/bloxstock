@@ -1,5 +1,5 @@
 {
-  "updated": "2026-04-30T00:16:42.116485+00:00",
+  "updated": "2026-04-30T03:44:08.652567+00:00",
   "stock": [
     {
       "name": "Pain",
@@ -16,77 +16,76 @@
       "type": "Natural"
     },
     {
-      "name": "Blade",
-      "price": 30000,
-      "robux": 100,
-      "rarity": "Common",
-      "type": "Natural"
+      "name": "Flame",
+      "price": 250000,
+      "robux": 550,
+      "rarity": "Uncommon",
+      "type": "Elemental"
     },
     {
-      "name": "Spin",
-      "price": 7500,
-      "robux": 75,
-      "rarity": "Common",
-      "type": "Natural"
+      "name": "Falcon",
+      "price": 300000,
+      "robux": 650,
+      "rarity": "Uncommon",
+      "type": "Beast"
     },
     {
-      "name": "Rocket",
-      "price": 5000,
-      "robux": 50,
-      "rarity": "Common",
-      "type": "Natural"
+      "name": "Sand",
+      "price": 425000,
+      "robux": 850,
+      "rarity": "Uncommon",
+      "type": "Elemental"
     }
   ],
   "mirageStock": [
     {
-      "name": "Quake",
-      "price": 1000000,
-      "robux": 1500,
+      "name": "Kitsune",
+      "price": 8000000,
+      "robux": 4000,
+      "rarity": "Mythical",
+      "type": "Beast"
+    },
+    {
+      "name": "Spirit",
+      "price": 3400000,
+      "robux": 2550,
+      "rarity": "Mythical",
+      "type": "Natural"
+    },
+    {
+      "name": "Gravity",
+      "price": 2500000,
+      "robux": 2300,
+      "rarity": "Mythical",
+      "type": "Natural"
+    },
+    {
+      "name": "Pain",
+      "price": 2300000,
+      "robux": 2200,
       "rarity": "Legendary",
       "type": "Natural"
     },
     {
-      "name": "Light",
-      "price": 650000,
-      "robux": 1100,
-      "rarity": "Rare",
+      "name": "Portal",
+      "price": 1900000,
+      "robux": 2000,
+      "rarity": "Legendary",
+      "type": "Natural"
+    },
+    {
+      "name": "Rumble",
+      "price": 2100000,
+      "robux": 2100,
+      "rarity": "Legendary",
       "type": "Elemental"
     },
     {
-      "name": "Diamond",
-      "price": 600000,
-      "robux": 1000,
-      "rarity": "Uncommon",
-      "type": "Natural"
-    },
-    {
-      "name": "Dark",
-      "price": 500000,
-      "robux": 950,
-      "rarity": "Uncommon",
-      "type": "Elemental"
-    },
-    {
-      "name": "Spring",
-      "price": 60000,
-      "robux": 180,
-      "rarity": "Common",
-      "type": "Natural"
-    },
-    {
-      "name": "Spin",
-      "price": 7500,
-      "robux": 75,
-      "rarity": "Common",
-      "type": "Natural"
-    },
-    {
-      "name": "Rocket",
-      "price": 5000,
-      "robux": 50,
-      "rarity": "Common",
-      "type": "Natural"
+      "name": "Dragon",
+      "price": 3500000,
+      "robux": 2600,
+      "rarity": "Mythical",
+      "type": "Beast"
     }
-  ],
-  "source": "Gamersberg"
+  ]
 }
