@@ -39,9 +39,9 @@
             --text: #ffffff;
             --muted: #94a3b8;
             --common: #9ca3af;
-            --uncommon: #4ade80;
-            --rare: #60a5fa;
-            --legendary: #c084fc;
+            --uncommon: #60a5fa;
+            --rare: #c084fc;
+            --legendary: #e879f9;
             --mythical: #f87171;
         }
         * { margin:0; padding:0; box-sizing:border-box; font-family:'Outfit',sans-serif; }
@@ -188,8 +188,20 @@
             justify-content: center;
             gap: 0.5rem;
             flex-wrap: wrap;
-            margin-bottom: 2rem;
             padding: 0 1rem;
+        }
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 1.5rem;
+        }
+        .filter-divider {
+            width: 1px;
+            height: 16px;
+            background: var(--border);
+            display: none;
         }
         .rf-btn {
             padding: 0.4rem 1rem;
@@ -208,10 +220,12 @@
         .rf-btn.active { background: rgba(255,255,255,0.1); border-color: var(--rf-color, #fff); color: var(--rf-color, #fff); box-shadow: 0 0 12px var(--rf-glow, transparent); }
         
         .rf-mythical    { --rf-color: var(--mythical); --rf-glow: rgba(248,113,113,0.3); }
-        .rf-legendary   { --rf-color: var(--legendary); --rf-glow: rgba(192,132,252,0.3); }
-        .rf-rare        { --rf-color: var(--rare); --rf-glow: rgba(96,165,250,0.3); }
-        .rf-uncommon    { --rf-color: var(--uncommon); --rf-glow: rgba(74,222,128,0.3); }
+        .rf-legendary   { --rf-color: var(--legendary); --rf-glow: rgba(232,121,249,0.3); }
+        .rf-rare        { --rf-color: var(--rare); --rf-glow: rgba(192,132,252,0.3); }
+        .rf-uncommon    { --rf-color: var(--uncommon); --rf-glow: rgba(96,165,250,0.3); }
         .rf-common      { --rf-color: var(--common); --rf-glow: rgba(156,163,175,0.3); }
+        .rf-source-normal { --rf-color: #94a3b8; --rf-glow: rgba(148,163,184,0.2); }
+        .rf-source-mirage { --rf-color: #60a5fa; --rf-glow: rgba(96,165,250,0.3); }
 
         /* ─── TABS ─── */
         .tabs {
@@ -318,8 +332,8 @@
 
         /* ─── LEGENDARY STYLE ─── */
         .card.rc-legendary {
-            border-color: rgba(192, 132, 252, 0.3);
-            box-shadow: 0 0 15px rgba(192, 132, 252, 0.1);
+            border-color: rgba(232, 121, 249, 0.3);
+            box-shadow: 0 0 15px rgba(232, 121, 249, 0.1);
             animation: cardAppearLegendary 0.6s ease-out backwards;
         }
         @keyframes cardAppearLegendary {
@@ -472,7 +486,7 @@
         }
         .timeline-dot {
             position: absolute;
-            left: -2.4rem;
+            left: calc(-2rem + 8px);
             top: 1.2rem;
             width: 14px;
             height: 14px;
@@ -481,6 +495,7 @@
             border: 3px solid var(--rc, var(--muted));
             box-shadow: 0 0 10px var(--rc, transparent);
             z-index: 2;
+            transform: translateX(-50%);
         }
         .timeline-time {
             font-size: 0.8rem;
@@ -690,13 +705,20 @@
         <div class="section-header" style="margin-top:0;">
             <h2>Stock History</h2>
         </div>
-        <div class="filter-container" id="history-filter" role="group" aria-label="Filter by rarity">
-            <button class="rf-btn active" data-rarity="all">All</button>
-            <button class="rf-btn rf-mythical" data-rarity="mythical">Mythical</button>
-            <button class="rf-btn rf-legendary" data-rarity="legendary">Legendary</button>
-            <button class="rf-btn rf-rare" data-rarity="rare">Rare</button>
-            <button class="rf-btn rf-uncommon" data-rarity="uncommon">Uncommon</button>
-            <button class="rf-btn rf-common" data-rarity="common">Common</button>
+        <div class="filter-group" id="history-filter-group">
+            <div class="filter-container" id="history-filter" role="group" aria-label="Filter by rarity">
+                <button class="rf-btn active" data-rarity="all">All</button>
+                <button class="rf-btn rf-mythical" data-rarity="mythical">Mythical</button>
+                <button class="rf-btn rf-legendary" data-rarity="legendary">Legendary</button>
+                <button class="rf-btn rf-rare" data-rarity="rare">Rare</button>
+                <button class="rf-btn rf-uncommon" data-rarity="uncommon">Uncommon</button>
+                <button class="rf-btn rf-common" data-rarity="common">Common</button>
+            </div>
+            <div class="filter-container" id="source-filter" role="group" aria-label="Filter by source">
+                <button class="rf-btn active" data-source="both">📦🌌 Both</button>
+                <button class="rf-btn rf-source-normal" data-source="normal">📦 Normal</button>
+                <button class="rf-btn rf-source-mirage" data-source="mirage">🌌 Mirage</button>
+            </div>
         </div>
         <div id="history-list" class="history-timeline">
             <div style="text-align:center;padding:2rem;color:var(--muted);font-size:0.85rem;">Loading history…</div>
@@ -739,9 +761,9 @@
     const RARITY_RANK = { mythical:5, legendary:4, rare:3, uncommon:2, common:1 };
     const RARITY_COLOR = {
         mythical:  { bg: 'linear-gradient(135deg, #f87171, #ef4444)', glow: 'rgba(248,113,113,0.4)' },
-        legendary: { bg: 'linear-gradient(135deg, #c084fc, #a855f7)', glow: 'rgba(192,132,252,0.4)' },
-        rare:      { bg: 'linear-gradient(135deg, #60a5fa, #3b82f6)', glow: 'rgba(96,165,250,0.4)'  },
-        uncommon:  { bg: 'linear-gradient(135deg, #4ade80, #22c55e)', glow: 'rgba(74,222,128,0.4)'  },
+        legendary: { bg: 'linear-gradient(135deg, #e879f9, #d946ef)', glow: 'rgba(232,121,249,0.4)' },
+        rare:      { bg: 'linear-gradient(135deg, #c084fc, #a855f7)', glow: 'rgba(192,132,252,0.4)' },
+        uncommon:  { bg: 'linear-gradient(135deg, #60a5fa, #3b82f6)', glow: 'rgba(96,165,250,0.4)'  },
         common:    { bg: 'linear-gradient(135deg, #9ca3af, #6b7280)', glow: 'rgba(156,163,175,0.3)' },
     };
 
@@ -924,7 +946,9 @@
 
         const frag = document.createDocumentFragment();
         data.stock.forEach((f, idx) => {
-            const rc = RC[f.rarity.toLowerCase()] || '';
+            let rKey = f.rarity.toLowerCase();
+            if (f.name === 'Eagle' && rKey === 'unknown') rKey = 'uncommon'; // Fix cho dữ liệu cũ
+            const rc = RC[rKey] || '';
             const beli = new Intl.NumberFormat('en-US').format(f.price);
             const robux = new Intl.NumberFormat('en-US').format(f.robux);
             const card = document.createElement('div');
@@ -1001,6 +1025,7 @@
     // ─── LOAD HISTORY ───
     let historyData = [];
     let historyFilter = new Set(['all']);
+    let sourceFilter = 'both';
 
     async function loadHistory() {
         if (historyData.length > 0) return;
@@ -1037,31 +1062,48 @@
                 if (fruitsToRender.length === 0) noMatch = true;
             }
 
-            const fruitsHtml = noMatch 
-                ? `<span style="color:var(--muted);font-size:0.75rem;opacity:0.4;font-style:italic;">No selected rarities</span>`
-                : fruitsToRender.map(f => {
-                    const rKey = f.rarity.toLowerCase();
-                    const rcClass = RC[rKey] || 'rc-common';
-                    return `<div class="tl-fruit ${rcClass}" data-name="${f.name}" style="--rc:var(--${rKey})">
-                                <img src="assets/fruits/${f.name}.webp" alt="${f.name}" width="32" height="32" loading="lazy" onerror="this.style.opacity=0.3">
-                            </div>`;
-                }).join('');
+            // sourceFilter: ẩn Normal col nếu chọn mirage-only
+            const showNormal = sourceFilter !== 'mirage';
+            // sourceFilter: ẩn Mirage col nếu chọn normal-only
+            const showMirage = sourceFilter !== 'normal';
+
+            const normalColHtml = showNormal ? `
+                <div class="timeline-col">
+                    <div class="timeline-col-label">📦 Normal</div>
+                    <div class="timeline-fruits">${noMatch
+                        ? `<span style="color:var(--muted);font-size:0.75rem;opacity:0.4;font-style:italic;">No match</span>`
+                        : fruitsToRender.map(f => {
+                            let rKey = f.rarity.toLowerCase();
+                            if (f.name === 'Eagle' && rKey === 'unknown') rKey = 'uncommon';
+                            const rcClass = RC[rKey] || 'rc-common';
+                            return `<div class="tl-fruit ${rcClass}" data-name="${f.name}" style="--rc:var(--${rKey})">
+                                        <img src="assets/fruits/${f.name}.webp" alt="${f.name}" width="32" height="32" loading="lazy" onerror="this.style.opacity=0.3">
+                                    </div>`;
+                        }).join('')
+                    }</div>
+                </div>` : '';
 
             let mirageColHtml = '';
-            if (entry.mirageStock && entry.mirageStock.length > 0) {
-                const mFruits = entry.mirageStock.map(f => {
-                    const rKey = f.rarity.toLowerCase();
-                    const rcClass = RC[rKey] || 'rc-common';
-                    return `<div class="tl-fruit tl-mirage ${rcClass}" data-name="${f.name}" style="--rc:var(--${rKey})">
-                                <img src="assets/fruits/${f.name}.webp" alt="${f.name}" width="28" height="28" loading="lazy" onerror="this.style.opacity=0.3">
-                            </div>`;
-                }).join('');
-                mirageColHtml = `
-                    <div class="timeline-col">
-                        <div class="timeline-col-label mirage">🌌 Mirage</div>
-                        <div class="timeline-fruits">${mFruits}</div>
-                    </div>
-                `;
+            if (showMirage && entry.mirageStock && entry.mirageStock.length > 0) {
+                let mirageToRender = entry.mirageStock;
+                if (!historyFilter.has('all')) {
+                    mirageToRender = entry.mirageStock.filter(f => historyFilter.has(f.rarity.toLowerCase()));
+                }
+                if (mirageToRender.length > 0) {
+                    const mFruits = mirageToRender.map(f => {
+                        let rKey = f.rarity.toLowerCase();
+                        if (f.name === 'Eagle' && rKey === 'unknown') rKey = 'uncommon';
+                        const rcClass = RC[rKey] || 'rc-common';
+                        return `<div class="tl-fruit tl-mirage ${rcClass}" data-name="${f.name}" style="--rc:var(--${rKey})">
+                                    <img src="assets/fruits/${f.name}.webp" alt="${f.name}" width="28" height="28" loading="lazy" onerror="this.style.opacity=0.3">
+                                </div>`;
+                    }).join('');
+                    mirageColHtml = `
+                        <div class="timeline-col">
+                            <div class="timeline-col-label mirage">🌌 Mirage</div>
+                            <div class="timeline-fruits">${mFruits}</div>
+                        </div>`;
+                }
             }
 
             const item = document.createElement('div');
@@ -1071,10 +1113,7 @@
                 <div class="timeline-content">
                     <div class="timeline-time">🕒 ${timeStr} · ${dateStr} <span style="color:var(--muted);opacity:0.6;margin-left:8px">(${relative})</span></div>
                     <div class="timeline-cols">
-                        <div class="timeline-col">
-                            <div class="timeline-col-label">📦 Normal</div>
-                            <div class="timeline-fruits">${fruitsHtml}</div>
-                        </div>
+                        ${normalColHtml}
                         ${mirageColHtml}
                     </div>
                 </div>
@@ -1116,6 +1155,16 @@
                     document.querySelector('#history-filter [data-rarity="all"]').classList.add('active');
                 }
             }
+            renderHistory();
+        });
+    });
+
+    // Source filter events
+    document.querySelectorAll('#source-filter .rf-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            sourceFilter = btn.dataset.source;
+            document.querySelectorAll('#source-filter .rf-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
             renderHistory();
         });
     });
