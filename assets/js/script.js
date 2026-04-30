@@ -501,41 +501,34 @@ document.getElementById('play-btn')?.addEventListener('click', () => {
 // ─── PWA INSTALL ───
 let deferredPrompt;
 const installBtn = document.getElementById('install-btn');
-const installSection = document.getElementById('install-section');
 
 window.addEventListener('beforeinstallprompt', e => {
     e.preventDefault();
     deferredPrompt = e;
-    if (installSection) installSection.style.display = 'block';
+    if (installBtn) installBtn.style.display = 'flex';
 });
 
 if (installBtn) {
     installBtn.addEventListener('click', async () => {
         if (!deferredPrompt) return;
         
-        // Theo dõi click cài đặt lên GA4
         if (typeof gtag === 'function') {
-            gtag('event', 'pwa_install_click', {
-                'event_category': 'engagement'
-            });
+            gtag('event', 'pwa_install_click', { 'event_category': 'engagement' });
         }
 
         deferredPrompt.prompt();
         const { outcome } = await deferredPrompt.userChoice;
         deferredPrompt = null;
         if (outcome === 'accepted') {
-            if (installSection) installSection.style.display = 'none';
+            if (installBtn) installBtn.style.display = 'none';
         }
     });
 }
 
 window.addEventListener('appinstalled', () => { 
-    if (installSection) installSection.style.display = 'none'; 
-    // Theo dõi cài đặt thành công lên GA4
+    if (installBtn) installBtn.style.display = 'none'; 
     if (typeof gtag === 'function') {
-        gtag('event', 'pwa_installed_success', {
-            'event_category': 'engagement'
-        });
+        gtag('event', 'pwa_installed_success', { 'event_category': 'engagement' });
     }
 });
 
