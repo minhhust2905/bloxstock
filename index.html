@@ -751,6 +751,7 @@
             
             // Refresh countdown immediately on tab change
             tickCountdown();
+            updatePlayNowButton(); // Cập nhật nút Play Now khi chuyển tab
             
             if (btn.dataset.tab === 'history') loadHistory();
         });
@@ -921,22 +922,10 @@
         } catch(e) { console.error(e); }
     }
 
-    function renderStockData(data) {
-        if (!data || data.updated === lastUpdated) return;
-
-        lastUpdated = data.updated;
-        window.isWaitingForNewData = false;
-        historyData = []; 
-
-        data.stock.sort((a, b) => {
-            const rA = RARITY_RANK[a.rarity.toLowerCase()] || 0;
-            const rB = RARITY_RANK[b.rarity.toLowerCase()] || 0;
-            if (rB !== rA) return rB - rA;
-            return b.price - a.price;
-        });
-
-        // Cập nhật nút Play Now dựa trên tab đang active
-        const activeTab = document.querySelector('.tab-btn.active')?.dataset.tab || 'normal';
+    function updatePlayNowButton() {
+        const data = window.currentStockData;
+        if (!data) return;
+        const activeTab = document.querySelector('.tab-btn.active')?.dataset.tab || 'stock';
         const displayStock = activeTab === 'mirage' ? data.mirageStock : data.stock;
         const top = (displayStock && displayStock.length > 0) ? displayStock[0] : data.stock[0];
 
@@ -950,6 +939,23 @@
             img.src = `assets/fruits/${top.name}.webp`;
             img.style.display = '';
         }
+    }
+
+    function renderStockData(data) {
+        if (!data || data.updated === lastUpdated) return;
+
+        lastUpdated = data.updated;
+        window.isWaitingForNewData = false;
+        window.currentStockData = data;
+        updatePlayNowButton();
+        historyData = []; 
+
+        data.stock.sort((a, b) => {
+            const rA = RARITY_RANK[a.rarity.toLowerCase()] || 0;
+            const rB = RARITY_RANK[b.rarity.toLowerCase()] || 0;
+            if (rB !== rA) return rB - rA;
+            return b.price - a.price;
+        });
 
         const frag = document.createDocumentFragment();
         data.stock.forEach((f, idx) => {
