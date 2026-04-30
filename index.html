@@ -235,13 +235,13 @@
             padding: 0 2rem 2rem;
         }
         .tab-btn {
-            padding: 0.5rem 1.4rem;
+            padding: 0.65rem 1.8rem;
             border-radius: 50px;
             border: 1px solid var(--border);
             background: transparent;
             color: var(--muted);
             font-family: 'Outfit', sans-serif;
-            font-size: 0.9rem;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
@@ -250,6 +250,9 @@
             background: rgba(255,255,255,0.1);
             border-color: rgba(255,255,255,0.2);
             color: #fff;
+        }
+        @media (max-width: 600px) {
+            .tab-btn { padding: 0.5rem 1.4rem; font-size: 0.9rem; }
         }
 
         /* ─── MAIN ─── */
