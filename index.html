@@ -68,15 +68,7 @@
           "@id": "https://bloxstock.pages.dev/#website",
           "name": "BloxStock",
           "url": "https://bloxstock.pages.dev/",
-          "description": "Real-time Blox Fruits stock tracker with accurate countdown timers for Normal Dealer and Mirage/Advanced Dealer.",
-          "potentialAction": {
-            "@type": "SearchAction",
-            "target": {
-              "@type": "EntryPoint",
-              "urlTemplate": "https://bloxstock.pages.dev/?q={search_term_string}"
-            },
-            "query-input": "required name=search_term_string"
-          }
+          "description": "Real-time Blox Fruits stock tracker with accurate countdown timers for Normal Dealer and Mirage/Advanced Dealer."
         },
         {
           "@type": "SoftwareApplication",
@@ -528,6 +520,31 @@
             padding: 0 2rem 4rem;
         }
 
+        .install-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            background: linear-gradient(135deg, rgba(232, 121, 249, 0.05), rgba(96, 165, 250, 0.05));
+            border: 1px solid var(--border);
+            padding: 1rem 1.5rem;
+            border-radius: 16px;
+        }
+
+        .install-card-text {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        .install-card-text strong { color: var(--text); font-size: 0.95rem; }
+
+        @media (max-width: 600px) {
+            .install-card { flex-direction: column; text-align: center; }
+        }
+
         .tab-panel {
             display: none;
         }
@@ -559,11 +576,7 @@
             animation: cardAppear 0.5s backwards;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            border-color: var(--border-hover);
-            background: rgba(255, 255, 255, 0.06);
-        }
+
 
         @keyframes cardAppear {
             from {
@@ -613,6 +626,7 @@
             transform: translateY(-8px);
             border-color: var(--border-hover);
             box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+            background: rgba(255, 255, 255, 0.06);
         }
 
         .card:hover .fruit-img {
@@ -1395,17 +1409,18 @@
             </div>
         </section>
 
-        <!-- PREMIUM INSTALL SECTION -->
-        <section id="install-section" style="display:none; margin-top: 4rem; margin-bottom: 2rem;">
-            <div class="legal-card" style="text-align: center; background: linear-gradient(135deg, rgba(232, 121, 249, 0.05), rgba(96, 165, 250, 0.05)); border: 1px solid var(--border); padding: 3rem 2rem; border-radius: 24px;">
-                <div style="font-size: 3.5rem; margin-bottom: 1rem;">📱</div>
-                <h2 style="margin-bottom: 1rem; font-size: 1.75rem; background: linear-gradient(135deg, #fff 30%, #64748b); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Install BloxStock App</h2>
-                <p style="color: var(--muted); margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6;">
-                    <strong>Get instant access to live stock timers right from your home screen.</strong><br>
-                    Fast, lightweight, and always up-to-date with the latest Tiger, Kitsune & Dragon stock.
-                </p>
-                <button id="install-btn" class="play-btn" style="display: inline-flex; width: auto; padding: 1rem 2.5rem; background: linear-gradient(135deg, #e879f9, #d946ef); border: none; box-shadow: 0 10px 20px -10px rgba(232, 121, 249, 0.5);">
-                    <span class="play-btn-text">Install Now</span>
+        <!-- INSTALL SECTION -->
+        <section id="install-section" style="display:none; margin-top: 2rem; margin-bottom: 1rem;">
+            <div class="install-card">
+                <div class="install-card-text">
+                    <span>📱</span>
+                    <div>
+                        <strong>Install BloxStock App</strong>
+                        <span style="margin-left:0.5rem;">— Truy cập nhanh stock từ màn hình chính</span>
+                    </div>
+                </div>
+                <button id="install-btn" class="play-btn" style="flex-shrink:0; width:auto; padding:0 1.5rem; background:linear-gradient(135deg,#e879f9,#d946ef); border:none; box-shadow:0 4px 15px -4px rgba(232,121,249,0.5);">
+                    <span class="play-btn-text">Install</span>
                 </button>
             </div>
         </section>
