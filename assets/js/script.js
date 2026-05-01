@@ -129,7 +129,11 @@ function tickCountdown() {
         return;
     }
 
-    wrap.classList.remove('is-restocking');
+    // Chỉ gỡ bỏ restocking UI khi thực sự ĐÃ có data mới (không còn waiting)
+    if (!window.isWaitingForNewData) {
+        wrap.classList.remove('is-restocking');
+    }
+    
     _hasTriggeredFetch = false;
     const h = Math.floor(diff / 3600000);
     const m = Math.floor((diff % 3600000) / 60000);
@@ -161,7 +165,8 @@ async function waitForNewStock(oldUpdated) {
     for (let i = 0; i < delays.length; i++) {
         await sleep(delays[i]);
         try {
-            const res = await fetch(API_BASE + '/updated');
+            // Chống browser cache bằng timestamp ngẫu nhiên
+            const res = await fetch(API_BASE + '/updated?t=' + Date.now(), { cache: 'no-store' });
             const { updated } = await res.json();
             if (updated && updated !== oldUpdated) {
                 console.log(`[BloxStock] Data mới sau ${delays.slice(0,i+1).reduce((a,b)=>a+b,0)/1000}s → Fetch full...`);
@@ -192,7 +197,7 @@ async function waitForNewStock(oldUpdated) {
         }
         slowAttempts++;
         try {
-            const res = await fetch(API_BASE + '/updated');
+            const res = await fetch(API_BASE + '/updated?t=' + Date.now(), { cache: 'no-store' });
             const { updated } = await res.json();
             if (updated && updated !== oldUpdated) {
                 console.log(`[BloxStock] Slow poll lần ${slowAttempts}: Có data mới!`);
@@ -236,15 +241,20 @@ function loadCache() {
 // ─── LOAD STOCK ───
 async function loadStock() {
     try {
+        const normalB = getLastResetBoundary(4).getTime();
+        const mirageB = getLastResetBoundary(2).getTime();
+        const latestBoundary = Math.max(normalB, mirageB);
+
         // Hiện cache ngay lập tức nếu có (zero skeleton delay)
         const cached = loadCache();
         if (cached && cached.data.updated !== lastUpdated) {
             renderStockData(cached.data);
         }
 
-        // Nếu cache còn mới < 2 phút, skip fetch
-        if (cached && Date.now() - cached.ts < 2 * 60 * 1000 && !window.isWaitingForNewData) {
-            console.log('[BloxStock] Cache fresh < 2m, skip fetch');
+        // Nếu cache còn mới < 2 phút VÀ cache được tạo SAU lần reset gần nhất, thì mới skip fetch.
+        // Ngược lại, nếu cache tạo trước giờ reset, nó đã LỖI THỜI dù chỉ mới 10 giây -> Buộc Fetch.
+        if (cached && Date.now() - cached.ts < 2 * 60 * 1000 && cached.ts > latestBoundary && !window.isWaitingForNewData) {
+            console.log('[BloxStock] Cache fresh < 2m & valid boundary, skip fetch');
             return;
         }
 
@@ -423,13 +433,37 @@ function renderHistory() {
         });
     }
 
-    items.slice(0, 100).forEach(entry => {
+    items.slice(0, 100).forEach((entry, index) => {
         const d = new Date(entry.updated);
         const timeStr = d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
         const dateStr = d.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' });
         const relative = timeAgo(d);
         
-        const bestFruit = (entry.stock && entry.stock.length > 0) ? entry.stock[0] : (entry.mirageStock && entry.mirageStock.length > 0 ? entry.mirageStock[0] : null);
+        // Logic thông minh: So sánh với bản ghi TRƯỚC ĐÓ
+        let isNormalDuplicate = false;
+        if (index < items.length - 1) {
+            const prevEntry = items[index + 1];
+            isNormalDuplicate = JSON.stringify(entry.stock) === JSON.stringify(prevEntry.stock);
+        }
+
+        // Quyết định xem cột nào được hiển thị
+        const showNormal = sourceFilter !== 'mirage' && entry.stock && entry.stock.length > 0 && !isNormalDuplicate;
+        const showMirage = sourceFilter !== 'normal' && entry.mirageStock && entry.mirageStock.length > 0;
+
+        // Tìm trái cây có độ hiếm cao nhất ĐANG ĐƯỢC HIỂN THỊ
+        let bestFruit = null;
+        if (showNormal && showMirage) {
+            const bestNormal = entry.stock[0];
+            const bestMirage = entry.mirageStock[0];
+            const rankN = bestNormal ? (RARITY_RANK[bestNormal.rarity.toLowerCase()] || 0) : 0;
+            const rankM = bestMirage ? (RARITY_RANK[bestMirage.rarity.toLowerCase()] || 0) : 0;
+            bestFruit = (rankM > rankN) ? bestMirage : bestNormal;
+        } else if (showNormal) {
+            bestFruit = entry.stock[0];
+        } else if (showMirage) {
+            bestFruit = entry.mirageStock[0];
+        }
+
         const dotColor = bestFruit ? (RC[bestFruit.rarity.toLowerCase()] || 'rc-common') : 'rc-common';
         
         let fruitsToRender = entry.stock;
@@ -438,11 +472,6 @@ function renderHistory() {
             fruitsToRender = entry.stock.filter(f => historyFilter.has(f.rarity.toLowerCase()));
             if (fruitsToRender.length === 0) noMatch = true;
         }
-
-        // sourceFilter: ẩn Normal col nếu chọn mirage-only HOẶC nếu không có dữ liệu normal (vừa được tối ưu ở backend)
-        const showNormal = sourceFilter !== 'mirage' && entry.stock && entry.stock.length > 0;
-        // sourceFilter: ẩn Mirage col nếu chọn normal-only
-        const showMirage = sourceFilter !== 'normal';
 
         const normalColHtml = showNormal ? `
             <div class="timeline-col">
