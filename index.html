@@ -1249,10 +1249,31 @@
                 height: 80px;
             }
         }
+        /* ─── TAB FLASH PREVENTION ─── */
+        html[data-tab-loading="mirage"] #btn-stock, html[data-tab-loading="history"] #btn-stock { background: transparent; border-color: var(--border); color: var(--muted); }
+        html[data-tab-loading="mirage"] #btn-stock::before, html[data-tab-loading="history"] #btn-stock::before { opacity: 0; }
+        
+        html[data-tab-loading="mirage"] #btn-mirage { background: rgba(255, 255, 255, 0.1); border-color: #fff; color: #fff; }
+        html[data-tab-loading="history"] #btn-history { background: rgba(255, 255, 255, 0.1); border-color: #fff; color: #fff; }
+
+        html[data-tab-loading="mirage"] #tab-stock { display: none !important; }
+        html[data-tab-loading="mirage"] #tab-mirage { display: block !important; }
+        
+        html[data-tab-loading="history"] #tab-stock { display: none !important; }
+        html[data-tab-loading="history"] #tab-history { display: block !important; }
     </style>
 </head>
 
 <body>
+    <script>
+        // Chặn Flash nhảy tab (Premium UX)
+        (function() {
+            const savedTab = localStorage.getItem('activeTab');
+            if (savedTab && savedTab !== 'stock') {
+                document.documentElement.setAttribute('data-tab-loading', savedTab);
+            }
+        })();
+    </script>
     <nav>
         <a href="/" class="nav-brand">Blox<span>Stock</span></a>
         <div class="nav-links">

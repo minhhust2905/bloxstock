@@ -24,6 +24,9 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
         updatePlayNowButton(); // Cập nhật nút Play Now khi chuyển tab
         
         if (btn.dataset.tab === 'history') loadHistory();
+
+        // ✅ Lưu tab đang chọn vào localStorage để ghi nhớ khi F5
+        localStorage.setItem('activeTab', btn.dataset.tab);
     });
 });
 
@@ -552,6 +555,14 @@ document.getElementById('history-search').addEventListener('input', (e) => {
 });
 
 // ─── INIT ───
+// Khôi phục tab cuối cùng người dùng đã xem (nếu có)
+const savedTab = localStorage.getItem('activeTab');
+if (savedTab && savedTab !== 'stock') {
+    const targetBtn = document.querySelector(`.tab-btn[data-tab="${savedTab}"]`);
+    if (targetBtn) targetBtn.click();
+}
+// Xóa bỏ trạng thái chặn flash sau khi đã ổn định
+document.documentElement.removeAttribute('data-tab-loading');
 loadStock();
 
 // ✅ Theo dõi click nút Join Game
