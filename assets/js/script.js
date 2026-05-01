@@ -79,7 +79,8 @@ function getNextMirageReset() { return getNextReset(2); }
 
 function pad(n) { return n.toString().padStart(2, '0'); }
 
-let _lastResetBoundary = null;
+let _lastNormalBoundary = null;
+let _lastMirageBoundary = null;
 
 function tickCountdown() {
     const activeTab = document.querySelector('.tab-btn.active')?.dataset.tab;
@@ -100,9 +101,20 @@ function tickCountdown() {
     const cdM = document.getElementById('cd-m');
     const cdS = document.getElementById('cd-s');
 
-    // ✅ Detect reset bằng boundary thay đổi (đáng tin hơn diff <= 0)
-    const currentBoundary = getLastResetBoundary(isMirage ? 2 : 4).getTime();
-    if (_lastResetBoundary !== null && currentBoundary !== _lastResetBoundary) {
+    // ✅ Detect reset bằng boundary thay đổi cho từng tab riêng biệt
+    const currentNormalBoundary = getLastResetBoundary(4).getTime();
+    const currentMirageBoundary = getLastResetBoundary(2).getTime();
+
+    // Khởi tạo lần đầu
+    if (_lastNormalBoundary === null) _lastNormalBoundary = currentNormalBoundary;
+    if (_lastMirageBoundary === null) _lastMirageBoundary = currentMirageBoundary;
+
+    // Kiểm tra xem boundary của tab đang active có thực sự thay đổi do thời gian trôi qua không
+    const normalChanged = currentNormalBoundary !== _lastNormalBoundary;
+    const mirageChanged = currentMirageBoundary !== _lastMirageBoundary;
+    const boundaryChanged = isMirage ? mirageChanged : normalChanged;
+
+    if (boundaryChanged) {
         wrap.classList.add('is-restocking');
         document.getElementById('tab-stock').classList.add('is-restocking');
         document.getElementById('tab-mirage').classList.add('is-restocking');
@@ -113,7 +125,10 @@ function tickCountdown() {
             waitForNewStock(lastUpdated);
         }
     }
-    _lastResetBoundary = currentBoundary;
+
+    // Luôn cập nhật cả 2 boundary để khi user đổi tab không bị lệch
+    _lastNormalBoundary = currentNormalBoundary;
+    _lastMirageBoundary = currentMirageBoundary;
 
     // ✅ Fallback: diff <= 0 phòng trường hợp boundary miss
     if (diff <= 0) {
