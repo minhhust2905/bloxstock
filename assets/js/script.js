@@ -426,7 +426,7 @@ function renderHistory() {
         const dateStr = d.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' });
         const relative = timeAgo(d);
         
-        const bestFruit = entry.stock[0];
+        const bestFruit = (entry.stock && entry.stock.length > 0) ? entry.stock[0] : (entry.mirageStock && entry.mirageStock.length > 0 ? entry.mirageStock[0] : null);
         const dotColor = bestFruit ? (RC[bestFruit.rarity.toLowerCase()] || 'rc-common') : 'rc-common';
         
         let fruitsToRender = entry.stock;
@@ -436,8 +436,8 @@ function renderHistory() {
             if (fruitsToRender.length === 0) noMatch = true;
         }
 
-        // sourceFilter: ẩn Normal col nếu chọn mirage-only
-        const showNormal = sourceFilter !== 'mirage';
+        // sourceFilter: ẩn Normal col nếu chọn mirage-only HOẶC nếu không có dữ liệu normal (vừa được tối ưu ở backend)
+        const showNormal = sourceFilter !== 'mirage' && entry.stock && entry.stock.length > 0;
         // sourceFilter: ẩn Mirage col nếu chọn normal-only
         const showMirage = sourceFilter !== 'normal';
 
@@ -480,6 +480,8 @@ function renderHistory() {
             }
         }
 
+        if (!normalColHtml && !mirageColHtml) return;
+
         const item = document.createElement('div');
         item.className = 'timeline-item';
         item.innerHTML = `
@@ -495,7 +497,7 @@ function renderHistory() {
         frag.appendChild(item);
     });
 
-    if (items.length === 0) {
+    if (frag.children.length === 0) {
         el.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--muted);font-size:0.85rem;">No entries found for selected rarities.</div>';
     } else {
         el.appendChild(frag);
