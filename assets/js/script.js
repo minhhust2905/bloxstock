@@ -76,6 +76,8 @@ function getNextMirageReset() { return getNextReset(2); }
 
 function pad(n) { return n.toString().padStart(2, '0'); }
 
+let _lastResetBoundary = null;
+
 function tickCountdown() {
     const activeTab = document.querySelector('.tab-btn.active')?.dataset.tab;
     const isMirage = activeTab === 'mirage';
@@ -95,7 +97,20 @@ function tickCountdown() {
     const cdM = document.getElementById('cd-m');
     const cdS = document.getElementById('cd-s');
 
-    // ✅ Khi countdown về 0: Poll thông minh cho đến khi có data mới
+    // ✅ Detect reset bằng boundary thay đổi (đáng tin hơn diff <= 0)
+    const currentBoundary = getLastResetBoundary(isMirage ? 2 : 4).getTime();
+    if (_lastResetBoundary !== null && currentBoundary !== _lastResetBoundary) {
+        wrap.classList.add('is-restocking');
+        window.isWaitingForNewData = true;
+        if (!_hasTriggeredFetch) {
+            _hasTriggeredFetch = true;
+            console.log('[BloxStock] Reset boundary thay đổi → Bắt đầu poll data mới...');
+            waitForNewStock(lastUpdated);
+        }
+    }
+    _lastResetBoundary = currentBoundary;
+
+    // ✅ Fallback: diff <= 0 phòng trường hợp boundary miss
     if (diff <= 0) {
         wrap.classList.add('is-restocking');
         window.isWaitingForNewData = true;
@@ -135,7 +150,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 async function waitForNewStock(oldUpdated) {
     console.log('[BloxStock] Polling... old timestamp:', oldUpdated);
-    const delays = [3000, 5000, 5000, 10000, 10000, 20000]; // tổng ~53s, 6 requests
+    const delays = [2000, 3000, 5000, 5000, 8000, 10000, 15000, 20000]; // tổng ~68s, 8 requests
     for (let i = 0; i < delays.length; i++) {
         await sleep(delays[i]);
         try {
@@ -153,10 +168,38 @@ async function waitForNewStock(oldUpdated) {
             console.log(`[BloxStock] Lần ${i+1}: Chưa có data mới, thử lại...`);
         } catch(e) { console.error(e); }
     }
-    // Sau ~53 giây vẫn không có data mới → render luôn cái cũ
-    console.warn('[BloxStock] Timeout → Render data hiện tại.');
-    _hasTriggeredFetch = false;
-    loadStock();
+    // Sau 68s vẫn không có data mới → slow poll mỗi 30s, tối đa 5 lần (~2.5 phút)
+    console.warn('[BloxStock] Fast poll timeout → Chuyển sang slow poll...');
+    let slowAttempts = 0;
+    const slowPoll = async () => {
+        if (!window.isWaitingForNewData || slowAttempts >= 5) {
+            console.warn('[BloxStock] Slow poll kết thúc → Reset trạng thái.');
+            _hasTriggeredFetch = false;
+            window.isWaitingForNewData = false;
+            const wrap = document.getElementById('countdown-wrap');
+            if (wrap) wrap.classList.remove('is-restocking');
+            loadStock();
+            return;
+        }
+        slowAttempts++;
+        try {
+            const res = await fetch(API_BASE + '/updated');
+            const { updated } = await res.json();
+            if (updated && updated !== oldUpdated) {
+                console.log(`[BloxStock] Slow poll lần ${slowAttempts}: Có data mới!`);
+                const full = await fetch(API_BASE);
+                const data = await full.json();
+                _hasTriggeredFetch = false;
+                window.isWaitingForNewData = false;
+                lastFetchTime = Date.now();
+                renderStockData(data);
+                return;
+            }
+            console.log(`[BloxStock] Slow poll lần ${slowAttempts}: Chưa có, thử lại sau 30s...`);
+        } catch(e) { console.error(e); }
+        setTimeout(slowPoll, 30000);
+    };
+    setTimeout(slowPoll, 30000);
 }
 
 // ─── CACHE HELPERS ───
@@ -184,7 +227,7 @@ async function loadStock() {
         }
 
         // Nếu cache còn mới < 2 phút, skip fetch
-        if (cached && Date.now() - cached.ts < 2 * 60 * 1000) {
+        if (cached && Date.now() - cached.ts < 2 * 60 * 1000 && !window.isWaitingForNewData) {
             console.log('[BloxStock] Cache fresh < 2m, skip fetch');
             return;
         }

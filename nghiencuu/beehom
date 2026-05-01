@@ -1,0 +1,122 @@
+1 Bee home
+Request URL
+https://raw.githubusercontent.com/iamishan877-max/Blox-Fruits-Stock/main/data/stock.json?t=1777612483863
+Request Method
+GET
+Status Code
+200 OK
+Remote Address
+[2606:50c0:8000::154]:443
+Referrer Policy
+strict-origin-when-cross-origin
+:authority
+raw.githubusercontent.com
+:method
+GET
+:path
+/iamishan877-max/Blox-Fruits-Stock/main/data/stock.json?t=1777612483863
+:scheme
+https
+accept
+*/*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+vi,en-US;q=0.9,en;q=0.8
+origin
+https://iamishan877-max.github.io
+priority
+u=1, i
+referer
+https://iamishan877-max.github.io/
+sec-ch-ua
+"Google Chrome";v="147", "Not.A/Brand";v="8", "Chromium";v="147"
+sec-ch-ua-mobile
+?1
+sec-ch-ua-platform
+"iOS"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+cross-site
+user-agent
+Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1
+
+2 Payload 
+
+t
+1777612483863
+
+3 Preview 
+
+{updated_at: "2026-05-01T04:31:22.821Z",…}
+mirage
+: 
+[{name: "Rocket-Rocket", price: 5000}, {name: "Spin-Spin", price: 7500},…]
+normal
+: 
+[{name: "Rocket-Rocket", price: 5000}, {name: "Spin-Spin", price: 7500},…]
+updated_at
+: 
+"2026-05-01T04:31:22.821Z"
+
+4 Respone 
+
+{
+  "updated_at": "2026-05-01T04:31:22.821Z",
+  "normal": [
+    {
+      "name": "Rocket-Rocket",
+      "price": 5000
+    },
+    {
+      "name": "Spin-Spin",
+      "price": 7500
+    },
+    {
+      "name": "Blade-Blade",
+      "price": 30000
+    },
+    {
+      "name": "Bomb-Bomb",
+      "price": 80000
+    }
+  ],
+  "mirage": [
+    {
+      "name": "Rocket-Rocket",
+      "price": 5000
+    },
+    {
+      "name": "Spin-Spin",
+      "price": 7500
+    },
+    {
+      "name": "Spring-Spring",
+      "price": 60000
+    },
+    {
+      "name": "Sand-Sand",
+      "price": 420000
+    },
+    {
+      "name": "Dark-Dark",
+      "price": 500000
+    },
+    {
+      "name": "Magma-Magma",
+      "price": 960000
+    },
+    {
+      "name": "Spider-Spider",
+      "price": 1500000
+    },
+    {
+      "name": "Gravity-Gravity",
+      "price": 2500000
+    }
+  ]
+}
+

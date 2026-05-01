@@ -1,0 +1,85 @@
+1 Header 
+Request URL
+https://fruityblox.com/stock
+Request Method
+POST
+Status Code
+200 OK
+Remote Address
+[2606:4700:20::681a:d55]:443
+Referrer Policy
+strict-origin-when-cross-origin
+:authority
+fruityblox.com
+:method
+POST
+:path
+/stock
+:scheme
+https
+accept
+text/x-component
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+vi,en-US;q=0.9,en;q=0.8
+content-length
+2
+content-type
+text/plain;charset=UTF-8
+cookie
+_ga=GA1.1.1657165377.1769445339; _cb=-wR8Tz0xiQBMWfv1; _sp_cookie=c57ae6d0-1b19-4338-bc94-d4726fa1f2fe; _cc_id=bd88b48c0f729d2ea6863a20f294ce5b; _lc2_fpi=dab5a65536b8--01kfxjjfewx6xeja3qbvy9h1qm; _lc2_fpi_meta=%7B%22w%22%3A1769445342685%7D; _chartbeat2=.1769445339611.1769941667102.1111011.t-BXm2NmbRKrvG1CwKp1SCHRqxI.1; FCCDCF=%5Bnull%2Cnull%2Cnull%2Cnull%2Cnull%2Cnull%2C%5B%5B32%2C%22%5B%5C%2201762bb8-7865-4ddf-b5dd-94e74250d26b%5C%22%2C%5B1769445340%2C480000000%5D%5D%22%5D%5D%5D; FCNEC=%5B%5B%22AKsRol8bubRu7CZfNVW7M3A-oGIV5Mj4ZK-qGRikMLVCQK1tGWTQOaaYUTdUmSyA03ijmBKAgFqJQAhPsur8WAKFm4KR-uG3-O4k-rT_w1PSymGXteCzfS8XGnKbsEF_NmOavJPq9LxTig_aPkQ2N0rb-EJcJMJTtw%3D%3D%22%5D%5D; cto_bundle=s3whBV84ZTRXRWNIaXZnNkJtM1B3MUprV2UlMkJ3Y0VENWZQbVhrV3cxc1NveWxmWkR2UFpjWDJjb1RYNDVpT29pTiUyQjRXbjVGaHUlMkZ0QmlLMzZWNXljdmtFcHV6eURXbFp2T29ydEhwTnl0TWNwbDdneDlwZ05lJTJGWGxWV2JobzJDOE5nWlM4QnZTdVhvdlJjUWNwSmE2ZFhSSjlXdyUzRCUzRA; cto_bidid=gQwW-l82QnQ5cWNRN3FNMjZzS3BFSEtBZElXSnJHeFZKJTJGR0s5UEdXemVLQWhtcWpySXFaWGlaY29VQlZRS2hFM0U3U1I3c2xMdThDQklHJTJCMWcwdUlkMG40WUlhSWY3RWtsZUFIeFBFNmI1QXhDQXc2T0VZdkNvdVRid2d3bmY5RTNTczY; __gads=ID=50b80cc7763e8199:T=1769445345:RT=1769953334:S=ALNI_MawMLP3URBLChutjcwysg91CB5lhg; __eoi=ID=3f814bb8116c208e:T=1769445345:RT=1769953334:S=AA-AfjaNa2MfUtFnAQhms27OVSwG; _sp_id.cef7=69237cf1-a6b1-4b7d-8296-680917a0fb68.1769445339.17.1769953343.1769941667.c28328ee-93bc-46ac-9959-d7dd31970336.d86decd0-e75e-4e87-8426-84f6a68e7839.c4bafc4f-9d95-4317-93ff-8c26195412f1.1769953332530.2; _ga_F55Y1PYQ4M=GS2.1.s1769960505$o20$g0$t1769960505$j60$l0$h575105546; popupDismissed=true; __Host-next-auth.csrf-token=f832754b7f4d4a5149e114918d4b74ade9688076bc9b2273b54be9b8b0574f06%7Cd54b345e55f9a17d890b4c78bf7cd31ef4cc380abac75b30d08b6f81052ca26c; __Secure-next-auth.callback-url=https%3A%2F%2Ffruityblox.com%2Ftrading%2Fcreate-trade
+next-action
+000e834c372ac1b9cdffe4f36d95a76c33c66cbd36
+next-router-state-tree
+%5B%22%22%2C%7B%22children%22%3A%5B%22stock%22%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D
+origin
+https://fruityblox.com
+priority
+u=1, i
+referer
+https://fruityblox.com/stock
+sec-ch-ua
+"Google Chrome";v="147", "Not.A/Brand";v="8", "Chromium";v="147"
+sec-ch-ua-mobile
+?1
+sec-ch-ua-platform
+"iOS"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-origin
+user-agent
+Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1
+Start AI assistance chats without prior context
+AI assistance chats can now be started from anywhere in DevTools and AI assistance will find required context based on the initial prompt.
+
+MCP server & CLI
+Optionally expose DevTools and automation capabilities through CLI, enabling coding agents to batch tool calls and improve token efficiency.
+
+Code generation in the Console & Sources panels
+Generate entire code blocks directly in the Console and Sources panels by typing natural language comments.
+
+2 Payload 
+
+[]
+No properties
+Start AI assistance chats without prior context
+AI assistance chats can now be started from anywhere in DevTools and AI assistance will find required context based on the initial prompt.
+
+MCP server & CLI
+Optionally expose DevTools and automation capabilities through CLI, enabling coding agents to batch tool calls and improve token efficiency.
+
+Code generation in the Console & Sources panels
+Generate entire code blocks directly in the Console and Sources panels by typing natural language comments.
+
+3 Preview 
+0:{"a":"$@1","f":"","b":"fVf4BAaS1ANg-cLsn4nAM","q":"","i":false}
+1:{"normal":[{"name":"Rocket","price":5000,"robuxPrice":50,"type":"Natural","image":"/images/fruits/rocket.webp"},{"name":"Spin","price":7500,"robuxPrice":75,"type":"Natural","image":"/images/fruits/spin.webp"},{"name":"Blade","price":30000,"robuxPrice":100,"type":"Natural","image":"/images/fruits/blade.webp"},{"name":"Bomb","price":80000,"robuxPrice":220,"type":"Natural","image":"/images/fruits/bomb.webp"}],"mirage":[{"name":"Rocket","price":5000,"robuxPrice":50,"type":"Natural","image":"/images/fruits/rocket.webp"},{"name":"Spin","price":7500,"robuxPrice":75,"type":"Natural","image":"/images/fruits/spin.webp"},{"name":"Spring","price":60000,"robuxPrice":180,"type":"Natural","image":"/images/fruits/spring.webp"},{"name":"Sand","price":420000,"robuxPrice":850,"type":"Elemental","image":"/images/fruits/sand.webp"},{"name":"Dark","price":500000,"robuxPrice":950,"type":"Elemental","image":"/images/fruits/dark.webp"},{"name":"Magma","price":960000,"robuxPrice":1300,"type":"Elemental","image":"/images/fruits/magma.webp"},{"name":"Spider","price":1500000,"robuxPrice":1800,"type":"Natural","image":"/images/fruits/spider.webp"},{"name":"Gravity","price":2500000,"robuxPrice":2300,"type":"Natural","image":"/images/fruits/gravity.webp"}]}
+
+4 Respone 
+0:{"a":"$@1","f":"","b":"fVf4BAaS1ANg-cLsn4nAM","q":"","i":false}
+1:{"normal":[{"name":"Rocket","price":5000,"robuxPrice":50,"type":"Natural","image":"/images/fruits/rocket.webp"},{"name":"Spin","price":7500,"robuxPrice":75,"type":"Natural","image":"/images/fruits/spin.webp"},{"name":"Blade","price":30000,"robuxPrice":100,"type":"Natural","image":"/images/fruits/blade.webp"},{"name":"Bomb","price":80000,"robuxPrice":220,"type":"Natural","image":"/images/fruits/bomb.webp"}],"mirage":[{"name":"Rocket","price":5000,"robuxPrice":50,"type":"Natural","image":"/images/fruits/rocket.webp"},{"name":"Spin","price":7500,"robuxPrice":75,"type":"Natural","image":"/images/fruits/spin.webp"},{"name":"Spring","price":60000,"robuxPrice":180,"type":"Natural","image":"/images/fruits/spring.webp"},{"name":"Sand","price":420000,"robuxPrice":850,"type":"Elemental","image":"/images/fruits/sand.webp"},{"name":"Dark","price":500000,"robuxPrice":950,"type":"Elemental","image":"/images/fruits/dark.webp"},{"name":"Magma","price":960000,"robuxPrice":1300,"type":"Elemental","image":"/images/fruits/magma.webp"},{"name":"Spider","price":1500000,"robuxPrice":1800,"type":"Natural","image":"/images/fruits/spider.webp"},{"name":"Gravity","price":2500000,"robuxPrice":2300,"type":"Natural","image":"/images/fruits/gravity.webp"}]}
+
