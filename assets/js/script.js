@@ -185,7 +185,7 @@ async function waitForNewStock(oldUpdated) {
             const { updated } = await res.json();
             if (updated && updated !== oldUpdated) {
                 console.log(`[BloxStock] Data mới sau ${delays.slice(0,i+1).reduce((a,b)=>a+b,0)/1000}s → Fetch full...`);
-                const full = await fetch(API_BASE);
+                const full = await fetch(API_BASE, { cache: 'no-store' });
                 const data = await full.json();
                 _hasTriggeredFetch = false;
                 lastFetchTime = Date.now();
@@ -216,7 +216,7 @@ async function waitForNewStock(oldUpdated) {
             const { updated } = await res.json();
             if (updated && updated !== oldUpdated) {
                 console.log(`[BloxStock] Slow poll lần ${slowAttempts}: Có data mới!`);
-                const full = await fetch(API_BASE);
+                const full = await fetch(API_BASE, { cache: 'no-store' });
                 const data = await full.json();
                 _hasTriggeredFetch = false;
                 window.isWaitingForNewData = false;
