@@ -497,6 +497,57 @@
             --rf-glow: rgba(96, 165, 250, 0.3);
         }
 
+        /* ─── TIME FILTER ─── */
+        .filter-row {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .tf-btn {
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            background: transparent;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            color: var(--muted);
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        /* ─── TIME FILTER ─── */
+        .filter-row {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .tf-btn {
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            background: transparent;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            color: var(--muted);
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        .tf-btn.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-color: #fff;
+        }
+
+        .tf-btn:hover:not(.active) {
+            color: #fff;
+            border-color: var(--border-hover);
+        }
+
         .history-search-container {
             width: 100%;
             max-width: 400px;
@@ -1492,6 +1543,14 @@
                 <h2>Stock History</h2>
             </div>
             <div class="filter-group" id="history-filter-group">
+                <!-- Time Range Filters -->
+                <div class="filter-container">
+                    <div class="filter-row">
+                        <button class="tf-btn active" data-range="1">Last 24h</button>
+                        <button class="tf-btn" data-range="7">7 Days</button>
+                        <button class="tf-btn" data-range="30">30 Days</button>
+                    </div>
+                </div>
                 <div class="filter-container" id="history-filter" role="group" aria-label="Filter by rarity">
                     <button class="rf-btn active" data-rarity="all">All</button>
                     <button class="rf-btn rf-mythical" data-rarity="mythical">Mythical</button>

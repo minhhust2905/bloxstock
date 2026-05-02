@@ -478,10 +478,18 @@ function normalizeText(text) {
 
 function renderHistory() {
     const el = document.getElementById('history-list');
+    if (!el) return;
     el.innerHTML = '';
     const frag = document.createDocumentFragment();
+
+    // Lấy dải thời gian đang chọn
+    const rangeDays = parseInt(document.querySelector('.tf-btn.active')?.dataset.range || '1');
+    const cutoffTs = Date.now() - (rangeDays * 24 * 60 * 60 * 1000);
     
     let items = [...historyData].reverse();
+
+    // Lọc theo thời gian
+    items = items.filter(entry => new Date(entry.updated).getTime() >= cutoffTs);
     
     // Apply Smart Search Filter
     if (historySearch) {
@@ -629,6 +637,15 @@ document.querySelectorAll('#source-filter .rf-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         sourceFilter = btn.dataset.source;
         document.querySelectorAll('#source-filter .rf-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderHistory();
+    });
+});
+
+// Time range filter events
+document.querySelectorAll('.tf-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         renderHistory();
     });
