@@ -213,25 +213,12 @@
         }
 
         header {
-            padding: 3rem 2rem 2rem;
+            padding: 1.25rem 2rem 0.75rem;
             text-align: center;
         }
 
         .brand {
-            font-size: 4rem;
-            font-weight: 800;
-            letter-spacing: -3px;
-            background: linear-gradient(135deg, #fff 30%, #64748b);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            line-height: 1;
-            margin-bottom: 2rem;
-        }
-
-        .brand span {
-            color: #f87171;
-            -webkit-text-fill-color: #f87171;
+            display: none;
         }
 
         /* ─── FLIP CLOCK ─── */
@@ -239,24 +226,32 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 2rem;
+            gap: 0.3rem;
+            margin-bottom: 1rem;
         }
 
         .countdown-label {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 700;
             color: var(--muted);
             text-transform: uppercase;
             letter-spacing: 3px;
-            margin-bottom: 1rem;
+            margin-bottom: 0.4rem;
             transition: color 0.3s;
         }
 
         .flip-clock {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 0.5rem;
+        }
+
+        .flip-colon {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: rgba(255, 255, 255, 0.2);
+            margin-bottom: 1rem;
+            line-height: 1;
         }
 
         .flip-seg {
@@ -269,13 +264,13 @@
         .flip-num {
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 14px;
-            width: 72px;
-            height: 72px;
+            border-radius: 10px;
+            width: 52px;
+            height: 52px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
+            font-size: 1.4rem;
             font-weight: 800;
             color: #fff;
             font-variant-numeric: tabular-nums;
@@ -326,8 +321,8 @@
         }
 
         .play-btn-icon {
-            width: 48px;
-            height: 48px;
+            width: 38px;
+            height: 38px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -336,16 +331,16 @@
         }
 
         .play-btn-icon img {
-            width: 28px;
-            height: 28px;
+            width: 24px;
+            height: 24px;
             object-fit: contain;
             filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.3));
         }
 
         .play-btn-text {
-            padding: 0 1.5rem 0 1rem;
+            padding: 0 1.2rem 0 0.8rem;
             color: #fff;
-            height: 48px;
+            height: 38px;
             display: flex;
             align-items: center;
         }
@@ -484,7 +479,7 @@
             display: flex;
             justify-content: center;
             gap: 0.5rem;
-            padding: 0 2rem 2rem;
+            padding: 0 2rem 1.25rem;
         }
 
         .tab-btn {
