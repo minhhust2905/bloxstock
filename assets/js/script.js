@@ -129,8 +129,9 @@ function tickCountdown() {
 
     if (boundaryChanged) {
         wrap.classList.add('is-restocking');
-        document.getElementById('tab-stock').classList.add('is-restocking');
-        document.getElementById('tab-mirage').classList.add('is-restocking');
+        // Chỉ đánh dấu đúng tab đang reset, không phủ cả hai
+        if (mirageChanged) document.getElementById('tab-mirage').classList.add('is-restocking');
+        if (normalChanged) document.getElementById('tab-stock').classList.add('is-restocking');
         window.isWaitingForNewData = true;
         if (!_hasTriggeredFetch) {
             _hasTriggeredFetch = true;
@@ -146,8 +147,12 @@ function tickCountdown() {
     // ✅ Fallback: diff <= 0 phòng trường hợp boundary miss
     if (diff <= 0) {
         wrap.classList.add('is-restocking');
-        document.getElementById('tab-stock').classList.add('is-restocking');
-        document.getElementById('tab-mirage').classList.add('is-restocking');
+        // Fallback chỉ biết tab nào đang đếm ngược → chỉ mark tab đó
+        if (isMirage) {
+            document.getElementById('tab-mirage').classList.add('is-restocking');
+        } else {
+            document.getElementById('tab-stock').classList.add('is-restocking');
+        }
         window.isWaitingForNewData = true;
         if (!_hasTriggeredFetch) {
             _hasTriggeredFetch = true;
