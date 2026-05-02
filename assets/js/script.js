@@ -503,42 +503,61 @@ function renderHistory() {
         });
     }
 
-    // 2. LỌC THEO SOURCE & RARITY
-    items = items.filter(entry => {
+    // 2. LỌC THEO SOURCE & RARITY + LÀM TRÒN GIỜ & DEDUPLICATE
+    const seenWindows = new Set();
+    const processedItems = [];
+
+    items.forEach(entry => {
+        const d = new Date(entry.updated);
+        const ts = d.getTime();
+        if (isNaN(ts)) return;
+
+        // Tìm khung giờ Reset mà mốc này thuộc về (Làm tròn về bội số của 2h)
+        const hourFloat = d.getUTCHours() + (d.getUTCMinutes() / 60);
+        const nearestEvenHour = Math.round(hourFloat / 2) * 2;
+        
+        // Tạo object Date mới cho khung giờ đã làm tròn (để hiển thị đẹp)
+        const roundedDate = new Date(d);
+        roundedDate.setUTCHours(nearestEvenHour, 0, 0, 0);
+        
+        // Nếu làm tròn lên 24h thì nhảy sang ngày hôm sau
+        const windowKey = roundedDate.getTime();
+
+        // CHỈ GIỮ LẠI BẢN GHI MỚI NHẤT CHO MỖI KHUNG GIỜ (Deduplicate)
+        if (seenWindows.has(windowKey)) return;
+        seenWindows.add(windowKey);
+
         const hasN = entry.stock && entry.stock.length > 0;
         const hasM = entry.mirageStock && entry.mirageStock.length > 0;
 
-        // Sửa lỗi isNormalWindow (Làm tròn đến khung 2h gần nhất để bù trừ delay)
-        const d = new Date(entry.updated);
-        const hourFloat = d.getUTCHours() + (d.getUTCMinutes() / 60);
-        const nearestEvenHour = Math.round(hourFloat / 2) * 2;
         const isNormalWindow = (nearestEvenHour % 4 === 0);
-
         const showN = isNormalWindow && sourceFilter !== 'mirage' && hasN;
         const showM = sourceFilter !== 'normal' && hasM;
 
-        if (!showN && !showM) return false;
+        if (!showN && !showM) return;
 
         // Lọc Rarity
         if (!historyFilter.has('all')) {
             const matchN = showN && entry.stock.some(f => historyFilter.has(f.rarity.toLowerCase()));
             const matchM = showM && entry.mirageStock.some(f => historyFilter.has(f.rarity.toLowerCase()));
-            if (!matchN && !matchM) return false;
+            if (!matchN && !matchM) return;
         }
 
+        // Lưu thông tin đã xử lý
+        entry._displayDate = roundedDate;
         entry._showN = showN;
         entry._showM = showM;
-        return true;
+        processedItems.push(entry);
     });
 
-    const totalMatches = items.length;
+    const totalMatches = processedItems.length;
 
-    // 3. CẮT 100 ITEM SAU KHI ĐÃ LỌC XONG
-    items.slice(0, 100).forEach(entry => {
-        const d = new Date(entry.updated);
+    // 3. RENDER 100 ITEM ĐÃ XỬ LÝ
+    processedItems.slice(0, 100).forEach(entry => {
+        const d = entry._displayDate;
         const timeStr = d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
         const dateStr = d.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' });
-        const relative = timeAgo(d);
+        const relative = timeAgo(new Date(entry.updated)); // Time ago vẫn tính theo thời gian cào thực tế cho chính xác
 
         // Chuẩn bị danh sách trái cây hiển thị (đã lọc Rarity)
         let renderN = entry.stock || [];
