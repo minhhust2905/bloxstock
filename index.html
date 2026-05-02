@@ -955,8 +955,11 @@
         }
 
         .mirage-card {
-            border-color: rgba(96, 165, 250, 0.2) !important;
-            background: linear-gradient(180deg, rgba(96, 165, 250, 0.05) 0%, rgba(0, 0, 0, 0) 100%) !important;
+            background: linear-gradient(180deg, rgba(96, 165, 250, 0.05) 0%, rgba(0, 0, 0, 0) 100%);
+        }
+
+        .mirage-card:not(.rc-mythical):not(.rc-legendary) {
+            border-color: rgba(96, 165, 250, 0.2);
         }
 
         .price-label {
