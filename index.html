@@ -1567,14 +1567,25 @@
         }, { threshold: 0 }).observe(_headerEl);
 
         setInterval(() => {
-            const h = document.getElementById('cd-h')?.textContent || '--';
-            const m = document.getElementById('cd-m')?.textContent || '--';
-            const s = document.getElementById('cd-s')?.textContent || '--';
-            _navTimerTime.textContent = h + ':' + m + ':' + s;
-            const isUrgent = document.getElementById('cd-h')?.classList.contains('urgent');
-            _navTimerTime.classList.toggle('urgent', !!isUrgent);
-            const raw = document.getElementById('reset-type-label')?.innerText || 'Resets in';
-            _navTimerLabel.textContent = raw.replace(' Resets In', '');
+            const wrap = document.getElementById('countdown-wrap');
+            const hEl = document.getElementById('cd-h');
+            
+            if (wrap && wrap.classList.contains('is-restocking')) {
+                _navTimerTime.textContent = 'RESTOCKING...';
+                _navTimerTime.classList.add('urgent');
+            } else if (hEl) {
+                const h = hEl.textContent || '--';
+                const m = document.getElementById('cd-m')?.textContent || '--';
+                const s = document.getElementById('cd-s')?.textContent || '--';
+                _navTimerTime.textContent = h + ':' + m + ':' + s;
+                const isUrgent = hEl.classList.contains('urgent');
+                _navTimerTime.classList.toggle('urgent', !!isUrgent);
+            } else {
+                _navTimerTime.textContent = '--:--:--';
+            }
+            
+            const rawLabel = document.getElementById('reset-type-label')?.innerText || 'Resets in';
+            _navTimerLabel.textContent = rawLabel.replace(' Resets In', '');
         }, 1000);
     });
 </script>

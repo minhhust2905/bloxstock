@@ -25,6 +25,19 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
         
         if (btn.dataset.tab === 'history') loadHistory();
 
+        // Nếu data của tab mới cũ hơn lần reset gần nhất của tab đó → fetch lại.
+        // Cần thiết khi user đang ở tab Mirage lúc Normal reset: boundary đã được
+        // update bởi tickCountdown() nhưng không trigger fetch vì tab không active.
+        if (!window.isWaitingForNewData && btn.dataset.tab !== 'history') {
+            const tabInterval = btn.dataset.tab === 'mirage' ? 2 : 4;
+            const tabReset    = getLastResetBoundary(tabInterval);
+            const dataAge     = window.currentStockData ? new Date(window.currentStockData.updated) : null;
+            if (!dataAge || dataAge < tabReset) {
+                console.log('[BloxStock] Tab switch: data cũ hơn reset của tab này → loadStock()');
+                loadStock();
+            }
+        }
+
         // ✅ Lưu tab đang chọn vào localStorage để ghi nhớ khi F5
         localStorage.setItem('activeTab', btn.dataset.tab);
     });
@@ -182,10 +195,13 @@ async function waitForNewStock(oldUpdated) {
         try {
             // Ép trình duyệt không dùng cache nội bộ, bắt buộc hỏi Cloudflare CDN
             const res = await fetch(API_BASE + '/updated', { cache: 'no-store' });
+            if (!res.ok) { console.warn(`[BloxStock] /updated trả ${res.status}, bỏ qua`); continue; }
             const { updated } = await res.json();
             if (updated && updated !== oldUpdated) {
                 console.log(`[BloxStock] Data mới sau ${delays.slice(0,i+1).reduce((a,b)=>a+b,0)/1000}s → Fetch full...`);
-                const full = await fetch(API_BASE, { cache: 'no-store' });
+                // cache: 'no-store' chỉ bypass browser cache, không bypass Cloudflare CDN edge cache.
+                // Dùng ?_t= để force Cloudflare re-fetch từ KV.
+                const full = await fetch(`${API_BASE}/stock?_t=${Date.now()}`, { cache: 'no-store' });
                 const data = await full.json();
                 _hasTriggeredFetch = false;
                 lastFetchTime = Date.now();
@@ -222,10 +238,11 @@ async function waitForNewStock(oldUpdated) {
         slowAttempts++;
         try {
             const res = await fetch(API_BASE + '/updated', { cache: 'no-store' });
+            if (!res.ok) { console.warn(`[BloxStock] /updated trả ${res.status}, bỏ qua`); setTimeout(slowPoll, 30000); return; }
             const { updated } = await res.json();
             if (updated && updated !== oldUpdated) {
                 console.log(`[BloxStock] Slow poll lần ${slowAttempts}: Có data mới!`);
-                const full = await fetch(API_BASE, { cache: 'no-store' });
+                const full = await fetch(`${API_BASE}/stock?_t=${Date.now()}`, { cache: 'no-store' });
                 const data = await full.json();
                 _hasTriggeredFetch = false;
                 window.isWaitingForNewData = false;
@@ -301,6 +318,7 @@ async function loadStock() {
             renderStockData(data); 
             
             window.isWaitingForNewData = true;
+            _hasTriggeredFetch = true; // Ngăn tickCountdown() gọi waitForNewStock() song song
             const wrap = document.getElementById('countdown-wrap');
             if (wrap) wrap.classList.add('is-restocking');
             const ts = document.getElementById('tab-stock');
