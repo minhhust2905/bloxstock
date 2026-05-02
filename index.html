@@ -180,6 +180,9 @@
         }
 
         .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
             font-size: 1.5rem;
             font-weight: 800;
             letter-spacing: -1px;
@@ -188,6 +191,15 @@
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
+        }
+
+        .nav-brand img {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            object-fit: cover;
+            -webkit-text-fill-color: initial; /* Để không bị dính gradient của text */
+            filter: drop-shadow(0 0 8px rgba(248, 113, 113, 0.3));
         }
 
         .nav-brand span {
@@ -1346,7 +1358,10 @@
         })();
     </script>
     <nav>
-        <a href="/" class="nav-brand">Blox<span>Stock</span></a>
+        <a href="/" class="nav-brand">
+            <img src="https://tr.rbxcdn.com/180DAY-4e311394a11f269a941a877073236e7a/150/150/Image/Webp/Fruit" alt="Blox Fruits">
+            Blox<span>Stock</span>
+        </a>
         <div class="nav-timer" id="nav-timer">
             <span class="nav-timer-label" id="nav-timer-label">Resets in</span>
             <span class="nav-timer-time" id="nav-timer-time">--:--:--</span>
