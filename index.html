@@ -1099,6 +1099,7 @@
             border-radius: 14px;
             padding: 1.2rem;
             transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+            overflow: visible;
         }
 
         /* Left accent bar theo rarity (Vẫn giữ vì nó quá đẹp và hữu dụng) */
@@ -1120,7 +1121,7 @@
         .timeline-item.rc-common    { --accent-color: var(--common); }
 
         .timeline-item:hover {
-            transform: translateX(6px) translateY(-1px);
+            transform: translateY(-3px);
             background: rgba(255, 255, 255, 0.045);
             border-color: rgba(255, 255, 255, 0.13);
         }
@@ -1209,6 +1210,7 @@
             flex-wrap: wrap;
             gap: 0.4rem;
             align-items: center;
+            overflow: visible;
         }
 
         .tl-fruits {
@@ -1430,6 +1432,24 @@
                 height: 80px;
             }
         }
+
+        /* ─── HISTORY TOPBAR ─── */
+        .history-topbar {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.75rem;
+        }
+        #history-filter-toggle.filters-active {
+            border-color: var(--legendary);
+            color: var(--legendary);
+            box-shadow: 0 0 8px rgba(232, 121, 249, 0.2);
+        }
+        @media (max-width: 600px) {
+            .history-topbar { gap: 0.5rem; }
+            .history-topbar .history-search-container { max-width: 100% !important; flex: 1 1 100%; }
+        }
         /* ─── TAB FLASH PREVENTION ─── */
         html[data-tab-loading="mirage"] #btn-stock, html[data-tab-loading="history"] #btn-stock { background: transparent; border-color: var(--border); color: var(--muted); }
         html[data-tab-loading="mirage"] #btn-stock::before, html[data-tab-loading="history"] #btn-stock::before { opacity: 0; }
@@ -1588,18 +1608,40 @@
 
         <!-- HISTORY TAB -->
         <section id="tab-history" class="tab-panel" role="tabpanel" aria-labelledby="btn-history">
-            <div class="section-header" style="margin-top:0;">
+            <div class="section-header" style="margin-top:0; justify-content:space-between; align-items:center;">
                 <h2>Stock History</h2>
+                <button id="history-filter-toggle" class="tf-btn" aria-expanded="false" aria-controls="history-filter-group" style="display:flex;align-items:center;gap:0.4rem;font-size:0.8rem;">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M7 12h10M11 18h2"/></svg>
+                    Filters
+                </button>
             </div>
-            <div class="filter-group" id="history-filter-group">
-                <!-- Time Range Filters -->
-                <div class="filter-container">
-                    <div class="filter-row">
-                        <button class="tf-btn active" data-range="1">24h</button>
-                        <button class="tf-btn" data-range="3">3 Days</button>
-                        <button class="tf-btn" data-range="7">7 Days</button>
-                    </div>
+
+            <!-- Top bar: time range + search (always visible) -->
+            <div class="history-topbar">
+                <div class="filter-row">
+                    <button class="tf-btn active" data-range="1">24h</button>
+                    <button class="tf-btn" data-range="3">3 Days</button>
+                    <button class="tf-btn" data-range="7">7 Days</button>
                 </div>
+                <div class="history-search-container" style="margin-top:0; flex:1; max-width:280px;">
+                    <svg class="history-search-icon" width="16" height="16" fill="none" stroke="currentColor"
+                        stroke-width="2" viewBox="0 0 24 24">
+                        <circle cx="11" cy="11" r="8" />
+                        <path d="m21 21-4.3-4.3" />
+                    </svg>
+                    <input type="text" id="history-search" class="history-search-input"
+                        placeholder="Search fruit..." autocomplete="off">
+                </div>
+            </div>
+
+            <!-- Search override notice -->
+            <div id="history-search-notice" style="display:none; text-align:center; margin:-0.25rem 0 0.75rem; font-size:0.72rem; color:var(--muted); opacity:0.7;">
+                Searching all history — time filter paused.
+                <button onclick="document.getElementById('history-search').value=''; historySearch=''; renderHistory();" style="background:none;border:none;color:var(--legendary);cursor:pointer;font-size:0.72rem;padding:0 0.25rem;font-family:inherit;">Clear</button>
+            </div>
+
+            <!-- Collapsible advanced filters -->
+            <div class="filter-group" id="history-filter-group" style="display:none; margin-top:0.5rem;">
                 <div class="filter-container" id="history-filter" role="group" aria-label="Filter by rarity">
                     <button class="rf-btn active" data-rarity="all">All</button>
                     <button class="rf-btn rf-mythical" data-rarity="mythical">Mythical</button>
@@ -1613,16 +1655,8 @@
                     <button class="rf-btn rf-source-normal" data-source="normal">📦 Normal</button>
                     <button class="rf-btn rf-source-mirage" data-source="mirage">🌌 Mirage</button>
                 </div>
-                <div class="history-search-container">
-                    <svg class="history-search-icon" width="16" height="16" fill="none" stroke="currentColor"
-                        stroke-width="2" viewBox="0 0 24 24">
-                        <circle cx="11" cy="11" r="8" />
-                        <path d="m21 21-4.3-4.3" />
-                    </svg>
-                    <input type="text" id="history-search" class="history-search-input"
-                        placeholder="Search fruit name..." autocomplete="off">
-                </div>
             </div>
+
             <div id="history-list" class="history-timeline">
                 <div style="text-align:center;padding:2rem;color:var(--muted);font-size:0.85rem;">Loading history…</div>
             </div>

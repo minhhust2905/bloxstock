@@ -302,8 +302,13 @@ async function loadStock() {
         
         // ✅ Kiểm tra xem data này là cũ hay mới so với mốc reset gần nhất
         const activeTab = document.querySelector('.tab-btn.active')?.dataset.tab;
-        const lastReset = getLastResetBoundary(activeTab === 'mirage' ? 2 : 4);
-        if (new Date(data.updated) < lastReset) {
+        const lastNormalReset = getLastResetBoundary(4);
+        const lastMirageReset = getLastResetBoundary(2);
+        const dataDate = new Date(data.updated);
+        const normalStale = dataDate < lastNormalReset;
+        const mirageStale = dataDate < lastMirageReset;
+
+        if (normalStale || mirageStale) {
             console.log('[BloxStock] Data is older than last reset! Entering polling mode...');
             // Render old data so skeletons don't stay forever
             renderStockData(data); 
@@ -312,10 +317,11 @@ async function loadStock() {
             _hasTriggeredFetch = true; // Ngăn tickCountdown() gọi waitForNewStock() song song
             const wrap = document.getElementById('countdown-wrap');
             if (wrap) wrap.classList.add('is-restocking');
+            // Chỉ mark đúng tab đang stale, không phủ cả hai
             const ts = document.getElementById('tab-stock');
-            if (ts) ts.classList.add('is-restocking');
+            if (ts && normalStale) ts.classList.add('is-restocking');
             const tm = document.getElementById('tab-mirage');
-            if (tm) tm.classList.add('is-restocking');
+            if (tm && mirageStale) tm.classList.add('is-restocking');
             
             waitForNewStock(data.updated);
         } else {
