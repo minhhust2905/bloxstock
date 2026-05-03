@@ -1,9 +1,20 @@
-Thấy 2 vấn đề:
-Bug 1 — line 396: fallback sai
-jsconst chance = masterInfo.chance || 1.0;
-Dragon có chance: 0.0 → falsy → fallback về 1.0 — Dragon hiển thị 1% thay vì 0% 😄
-Fix:
-jsconst chance = masterInfo.chance != null ? masterInfo.chance : null;
-Bug 2 — line 412: Dragon hiển thị "0%" hay "Off-sale"?
-Cần xử lý riêng:
-jsconst chanceDisplay = chance === 0 ? 'Off-sale' : chance === null ? 'N/A' : `${chance}%`;
+10:59
+Claude responded: Clean, logic đúng 👍 Chỉ có 1 vấn đề nhỏ:
+Clean, logic đúng 👍 Chỉ có 1 vấn đề nhỏ:
+
+merge_data.py đọc từ fruits_master.json nhưng file này chưa tồn tại trong repo — Gemini tạo thêm file mới thay vì dùng assets/data/fruits.json trực tiếp.
+
+Cần confirm: fruits_master.json trong nghiencuu/ có phải là bản copy của assets/data/fruits.json không? Nếu có thì cần commit file này lên repo trước khi workflow chạy lần đầu.
+
+Còn lại ổn hết:
+
+Dragon hardcode 0.0 ✅
+Trái không có trong wiki 2026 → 0.0 ✅
+Save cả 2 nơi (fruits_master.json + assets/data/fruits.json) ✅
+stefanzweifel/git-auto-commit-action — action này tốt, không commit nếu không có gì thay đổi ✅
+Weekly thứ Hai 00:00 UTC ✅
+Việc cần làm trước khi push:
+
+Copy assets/data/fruits.json → nghiencuu/fruits_master.json
+Commit cả 3 file lên repo
+Xong là workflow chạy được 👍

@@ -372,6 +372,12 @@ window.renderFruits = async function(isMirage = false) {
         window._fruitsDataFetch
     ]);
     
+    // Cập nhật con số tổng chu kỳ (Dynamic)
+    if (master && master.total_cycles_analyzed) {
+        const cycleEl = document.getElementById('total-cycles-display');
+        if (cycleEl) cycleEl.textContent = master.total_cycles_analyzed;
+    }
+    
     window._initialStockFetch = null; 
     if (!data) return;
 
