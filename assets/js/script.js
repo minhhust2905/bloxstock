@@ -384,11 +384,11 @@ window.renderFruits = async function(isMirage = false) {
         const chanceDisplay = (chance === 0) ? 'Off-sale' : (chance === null ? 'N/A' : `${chance}%`);
         
         // --- CHỌN MÀU THEO GIÁ TRỊ SỐ (FUNCTIONAL COLORING) ---
-        let chanceColor = '#94a3b8'; // Mặc định: Xám xanh (Common)
+        let chanceColor = '#94a3b8'; // Mặc định: Xám xanh (> 20% - Rất phổ biến)
         if (chance !== null && chance !== 0) {
             if (chance < 1) chanceColor = '#f87171';      // Đỏ rực (Siêu hiếm < 1%)
             else if (chance < 5) chanceColor = '#fbbf24'; // Vàng kim (Hiếm 1-5%)
-            else if (chance < 20) chanceColor = '#86efac';// Xanh lá (Khá hiếm 5-20%)
+            else if (chance < 20) chanceColor = '#4ade80';// Xanh lá tươi (Khá hiếm 5-20%)
         } else if (chance === 0) {
             chanceColor = '#ef4444'; // Dragon/Off-sale: Đỏ đậm
         }
