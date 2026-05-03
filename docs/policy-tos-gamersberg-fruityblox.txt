@@ -1,0 +1,236 @@
+FruityBlox
+Privacy Policy
+Last Updated: September 12th, 2025
+
+Introduction
+At FruityBlox.com, your privacy is of utmost importance to us. This Privacy Policy outlines our practices regarding the collection, use, and disclosure of information on our website. By using FruityBlox.com, you agree to the terms and conditions of this Privacy Policy.
+
+Google Analytics
+FruityBlox.com uses Google Analytics to collect and analyze anonymous user data, such as website traffic and usage patterns. This information helps us improve our website and user experience. Google Analytics does not collect personal information or associate your IP address with any other data held by Google.
+
+Advertising and Monetization
+We display advertisements on FruityBlox.com to help monetize our website. The advertisements may be served by third-party ad networks that use cookies and similar technologies to collect non-personal information about your browsing activity. This information is used to display relevant ads to you. We do not have control over the privacy practices of these third-party ad networks.
+
+All or partial advertising on this Website or App is managed by third-party advertising providers. These providers may collect and use certain aggregated and anonymized data for advertising purposes. Each advertising provider has their own privacy policy that governs how they collect, use, and protect your data.
+
+For EU Users only: If you are located in countries that are part of the European Economic Area, in the United Kingdom or Switzerland, you may be presented with messaging from our Consent Management Platform (CMP) around your privacy choices as a user in regards to digital advertising, applicable vendors, cookie usage and more.
+
+Payment Processing and Stripe
+FruityBlox uses Stripe, a third-party payment processor, to process payments for premium subscriptions. When you subscribe to FruityBlox Premium, your payment information is collected and processed directly by Stripe through their secure checkout platform.
+
+Information Collected by Stripe
+When you make a payment through Stripe, they may collect the following information:
+
+Contact information (such as name, email address, and phone number)
+Billing and shipping address
+Payment method details (such as credit card information or bank account details)
+Transaction information (such as purchase amount and date)
+Device information and IP address
+How Stripe Uses Your Information
+Stripe uses your information to:
+
+Process transactions and send notices about your transactions
+Verify your identity and authenticate your payment method
+Detect and prevent fraud, unauthorized transactions, and other illegal activities
+Improve and optimize their services and user experience
+Comply with legal obligations applicable to financial institutions
+Data Security
+Stripe maintains industry-standard security measures to protect your payment information. FruityBlox does not store your full credit card details on our servers. All payment processing occurs on Stripe's secure systems, which are PCI DSS compliant.
+
+3D Secure Authentication
+For enhanced security, Stripe may use 3D Secure Authentication (3DS) during the checkout process. This additional security layer helps verify your identity with your card issuer when making online purchases. During this process, you may be redirected to your bank's website or app to approve the transaction.
+
+Data Sharing
+Stripe may share your data with:
+
+Financial institutions necessary to process your transactions (such as banks and card networks)
+Service providers that help Stripe deliver their services
+Law enforcement or regulatory authorities when required by law
+Your Rights
+You have rights regarding your personal data processed by Stripe, including the right to access, correct, or delete your information. For more information about these rights or how to exercise them in relation to your payment data, please contact Stripe directly.
+
+Stripe's Privacy Policy
+For complete information about how Stripe collects, uses, and protects your data, please review Stripe's Privacy Policy at https://stripe.com/privacy.
+
+Cookies
+FruityBlox.com uses cookies to enhance your user experience and track website performance. Cookies are small text files stored on your device by your web browser. They help us remember your preferences, analyze website usage, and personalize content and ads.
+
+We use two types of cookies on our website:
+
+- Session cookies: These cookies are temporary and are automatically deleted when you close your browser. They are used to maintain your session as you navigate through the website.
+
+- Persistent cookies: These cookies remain on your device until they expire or you manually delete them. They are used to remember your preferences and settings for future visits to our website.
+
+You can control and manage cookies through your browser settings. Most browsers allow you to block or delete cookies, but doing so may impact the functionality and features of our website. By using FruityBlox.com, you consent to our use of cookies in accordance with this Privacy Policy.
+
+Third-Party Authentication
+Our website utilizes third-party authentication through Discord for user sign-ins. When you sign in through Discord, you are subject to Discord's privacy policy and terms of service. We do not have access to, nor do we store, any of your personal information from Discord.
+
+Commitment to Data Security
+FruityBlox.com will not sell or use your data in any malicious way. We strive to protect your information and maintain the security and integrity of our website.
+
+By using FruityBlox.com, you agree to the terms of this Privacy Policy. If you do not agree with any part of this Privacy Policy, please do not use our website.
+
+Collection of User Data
+FruityBlox.com does not collect personal data from its users. We value your privacy and take steps to ensure that your information remains protected.
+
+Age Restrictions and Parental Consent
+Users under the age of 13 are encouraged to obtain parental consent before using our website. Parents or guardians are responsible for supervising their children's use of FruityBlox.com and ensuring compliance with this Privacy Policy.
+
+No Affiliation with Roblox or Blox Fruits
+FruityBlox.com is an independent website and is not affiliated with, endorsed, or sponsored by Roblox or the game Blox Fruits. All rights related to Roblox and Blox Fruits belong to their respective owners.
+
+Updates to the Privacy Policy
+We reserve the right to modify this Privacy Policy at any time. Changes will be posted on this page with the updated "Last Updated" date. It is your responsibility to review this Privacy Policy periodically to stay informed about our privacy practices.
+
+Contact Us
+For any questions, concerns, or inquiries related to this Privacy Policy, please contact jai@gamurs.com
+
+Terms of Service
+Last Updated: September 12, 2025
+
+User Agreement
+By accessing or using our services, you agree to be bound by these Terms of Service. If you do not agree to these terms, you may not access or use our services.
+
+Account Responsibility
+You are responsible for safeguarding your account credentials and for any activity that occurs under your account. You must notify us immediately of any unauthorized use of your account.
+
+User Content
+You retain all rights to any content you submit, post, or display on or through our services. By submitting content, you grant us a worldwide, non-exclusive, royalty-free license to use, reproduce, modify, adapt, publish, and distribute such content.
+
+You represent and warrant that you own or have the necessary rights to all content you submit and that the content does not violate any third party's rights or applicable laws.
+
+Prohibited Conduct
+You agree not to:
+
+Violate any applicable laws or regulations
+Impersonate any person or entity
+Harass, abuse, or harm another person
+Use our services for any illegal or unauthorized purpose
+Interfere with or disrupt our services or servers
+Termination
+We may terminate or suspend your account and access to our services at any time, without prior notice or liability, for any reason whatsoever, including without limitation if you breach these Terms of Service.
+
+Disclaimer of Warranties
+Our services are provided "as is" and "as available" without warranties of any kind, either express or implied, including, but not limited to, implied warranties of merchantability, fitness for a particular purpose, or non-infringement.
+
+Limitation of Liability
+In no event shall we be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses.
+
+Changes to Terms
+We reserve the right to modify or replace these Terms of Service at any time. If a revision is material, we will provide at least 30 days' notice prior to any new terms taking effect.
+
+Gamersberg
+
+Privacy Policy
+Effective Date: April 11th, 2024
+
+This Privacy Policy explains how Gamersberg.com ("Gamersberg", "we," "us," or "our") collects, uses, shares, and protects information about the users ("you" or "your") of our website, located at Gamersberg.com (the "Site").
+Information We Collect:
+We collect the following types of information from you:
+Information You Provide Directly:
+Contact information (such as name, email address) when you register for an account, subscribe to our newsletters, or participate in promotions.
+Content that you submit or post on the Site (such as comments, reviews, or forum posts).
+Any communications with our customer support team.
+Information Collected Automatically:
+Device information (such as IP address, browser type, operating system, hardware model).
+Usage information (such as pages visited, time spent on pages, links clicked).
+Location data (approximate location derived from your IP address).
+Cookies and Similar Technologies: We use cookies and other technologies to personalize your experience, analyze site traffic, and serve targeted advertisements. For more information, see the section titled "Cookies and Similar Technologies" below.
+We use your information for the following purposes:
+To operate and provide the Site's features and services.
+To communicate with you, including responding to your inquiries and sending you newsletters and promotional emails (with your consent).
+To personalize your experience on the Site, including by recommending content that may interest you.
+To understand how our Site is used and to make improvements.
+To advertise our products and services, as well as those of select third parties, both on our Site and on other websites. We will not sell your data to third parties for their own advertising purposes.
+To protect the security and integrity of our Site.
+To comply with legal obligations.
+How We Share Your Information:
+We may share your information in the following circumstances:
+Service Providers: We may share your information with third-party service providers who help us with tasks such as website hosting, data analysis, marketing, and customer support.
+Advertising Partners: We work with advertising partners, including Playwire (https://www.playwire.com) and Videoo.tv (https://videoo.tv/en), to display relevant advertisements to you on our Site and other websites. These partners may use cookies and other tracking technologies to collect information about your online activities and serve targeted ads. We will not sell your personal information to these advertising partners.
+Business Transfers: Your information may be transferred as part of a merger, acquisition, or sale of all or part of our assets.
+Legal Compliance: We may disclose your information if we believe it is necessary to comply with the law, such as in response to a subpoena or court order.
+Your Choices and Controls
+Account Settings: You can manage some of your personal information by updating your account settings.
+Email Preferences: You can unsubscribe from promotional emails by clicking the "unsubscribe" link at the bottom of those emails.
+Cookies and Similar Technologies: You can adjust your browser settings to block or restrict cookies, although this may affect the functionality of our Site.
+Cookies and Similar Technologies
+- We and our partners use cookies and other tracking technologies to collect information about your browsing activities. Cookies are small text files stored on your device that allow us to recognize you when you return to the Site. We use cookies for purposes like personalization, analytics, and targeted advertising.
+Data Security
+- The security of your information is important to us. We implement reasonable technical, administrative, and physical safeguards to protect personal information from unauthorized access, use, or disclosure. However, no method of data transmission over the internet can be completely secure.
+Children's Privacy
+- Our Site is not intended for use by children under 13 years of age. We do not knowingly collect personal information from children under 13.
+Changes to this Privacy Policy
+- We reserve the right to update this Privacy Policy at any time. Changes will be effective when posted on this page with an updated "Effective Date."
+Contact Us
+- If you have questions about this Privacy Policy, please contact us at nithin@gamersberg.com.
+
+Terms of Service
+Effective Date: April 11th, 2024
+
+Welcome to Gamersberg.com! These terms and conditions (“Terms”) govern your use of our website, services, and any related content provided by Gamersberg (“we,” “us,” or “our”). By accessing or using our website and services, you agree to be bound by these Terms. If you do not agree with any part of these Terms, please do not use our website and services.
+Privacy Policy
+Your use of our website and services is subject to our Privacy Policy, which describes how we collect, store, use, and share your information. By using our website and services, you consent to the practices outlined in our Privacy Policy.
+Use of Services
+- You may access and use our website and services solely for your personal, non-commercial use and in compliance with these Terms. You must not use our website and services for any unlawful or prohibited activities. Specifically, you agree not to:
+Use the site for the purpose of promoting cheating, piracy, or the distribution of unauthorized game modifications.
+Engage in harassment, threats, or the sharing of private information of other users.
+Disrupt or interfere with the operation of our services or the networks connected to them.
+Intellectual Property
+All content, materials, trademarks, and other intellectual property on our website are the property of Gamersberg or our licensors. You may not reproduce, modify, distribute, or otherwise exploit any of our intellectual property without our prior written consent. Game-related content such as screenshots, videos, or reviews may be used in accordance with fair use principles and with proper attribution.
+User Generated Content
+- Gamersberg may provide features that allow you to post, upload, or share content (text, images, videos, etc.). You retain ownership of your content but you grant us a non-exclusive, worldwide license to use, host, and display your content in connection with the operation of our website. Ensure your content does not violate intellectual property rights or infringe upon the rights of others.
+Disclaimer !
+The information provided on our website is for general informational purposes only. We make no warranties or representations about the accuracy, reliability, completeness, or timeliness of the information. Your use of the information on our website is at your own risk.
+Third-Party Links
+Our website may contain links to third-party websites or services that are not owned or controlled by Gamersberg. We have no control over, and assume no responsibility for, the content, privacy policies, or practices of any third-party websites or services. You acknowledge and agree that Gamersberg shall not be responsible or liable, directly or indirectly, for any damage or loss caused or alleged to be caused by or in connection with the use of or reliance on any such content, goods, or services.
+Limitation of Liability
+To the maximum extent permitted by applicable law, in no event shall Gamersberg or its affiliates, directors, officers, employees, or agents be liable for any indirect, consequential, incidental, special, punitive, or exemplary damages arising out of or in connection with your use of our website and services.
+Indemnification
+You agree to indemnify, defend, and hold harmless Gamersberg and its affiliates, directors, officers, employees, and agents from and against any claims arising out of or in connection with your use of our website and services or any violation of these Terms.
+Modifications
+We reserve the right to modify or update these Terms at any time. Any changes will be effective immediately upon posting. Your continued use of our website and services after any changes means you accept the revised Terms.
+Governing Law
+These Terms shall be governed by and construed in accordance with the laws of Telangana, India. Any disputes will be subject to the exclusive jurisdiction of the courts in Hyderabad.
+Contact Us
+- If you have any questions regarding these Terms, please contact us at nithin@gamersberg.com.
+By using our website and services, you acknowledge that you have read, understood, and agreed to these Terms and our Privacy Policy.
+
+Disclaimer !
+Effective Date: April 11th, 2024
+
+This disclaimer outlines the terms and conditions for using the Gamersberg website ("The Website"). By accessing or using our site, you agree to be bound by the points outlined below.
+
+Information and Content
+Accuracy: We strive to provide accurate and up-to-date information on Gamersberg. However, errors, omissions, or outdated information may occur. We do not guarantee the absolute completeness, reliability, suitability, or availability of the information, downloads, or user-generated content found on the Website.
+
+Informational Purposes: Content on Gamersberg is for general informational and entertainment purposes related to gaming. It should not be considered a substitute for professional advice.
+
+External Links
+Responsibility: We cannot control the content, availability, accuracy, or nature of these external resources. We are not liable for any issues arising from your use of third-party websites.
+
+No Endorsement: The presence of a link does not signify our endorsement of the linked website, its content, or its owners.
+
+Use of the Website
+Your Discretion: You use the Website and any services (including downloads, forums, or other interactive features) entirely at your own risk. We make no guarantees regarding uninterrupted service, security, freedom from errors, or the legitimacy or safety of user-generated content.
+
+Intellectual Property: All content, design, graphics, and other elements on Gamersberg are protected by copyright and intellectual property laws. Do not reproduce, distribute, or utilize these materials without our express permission.
+
+Limitation of Liability
+Gamersberg (and its owners, operators, and affiliates) will not be responsible for any damages (direct, indirect, incidental, special, or consequential) connected to the use of, or inability to use, the Website. This includes damages from errors, data loss, interruptions, viruses, content downloaded from the site, or any actions of other users of the Website. Our liability is excluded to the maximum extent permitted by law.
+
+Indemnification
+You agree to defend, indemnify, and hold harmless Gamersberg (and its owners, operators, and affiliates) against any claims, expenses, liabilities, or losses stemming from your use of the Website, any downloaded content, your participation in interactive features, or if you violate any terms of this Disclaimer.
+
+Modifications and Updates
+We may change or revise this Disclaimer without prior notice. Please check this page periodically to stay updated. If you continue to use Gamersberg after any changes, it indicates your acceptance of the updated Disclaimer.
+
+Governing Law and Jurisdiction
+This Disclaimer is governed by the laws of Telangana, India. Any disputes related to the Website will be handled exclusively under the jurisdiction of the courts of Telangana.
+
+Contact Us
+For questions or concerns regarding this Disclaimer, reach out to us at nithin@gamersberg.com.
+
+By using Gamersberg, you acknowledge that you have read, fully understand, and agree to all terms and conditions in this Disclaimer.
+

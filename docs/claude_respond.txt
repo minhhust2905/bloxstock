@@ -73,19 +73,13 @@ CũMớiRequest/user/reset~13~2Request đến Gamersberg2/reset2-7/resetClient c
 Trade-off duy nhất: worst case chậm hơn 5 phút so với fast poll 68s. Nhưng đổi lại ít bug hơn rất nhiều 👍
 
 NEW ! 
-Có 1 điểm inconsistent — line 210 và 252 mâu thuẫn nhau:
-js// Line 210: max 20 lần → 20 × 15s = 5 phút
-if (!window.isWaitingForNewData || attempts > 20) {
 
-// Line 217: if attempts > 60 thì loadStock() — nhưng không bao giờ reach vì đã stop ở 20
-if (attempts > 60) loadStock();
-
-// Line 252: delay adaptive — 6 lần đầu 10s, sau 20s
-const delay = attempts <= 6 ? 10000 : 20000;
-// Nhưng setTimeout ở line 223 dùng 15000 cố định
-setTimeout(poll, 15000);
-Tức là line 252 tính delay nhưng không dùng nó — setTimeout vẫn hardcode 15000. Dead code.
-Fix:
-js// Line 223 đổi thành
-setTimeout(poll, delay); // dùng adaptive delay
-// Line 217 xóa đi vì không bao giờ reach
+3 lớp:
+Lớp 1 — Origin check
+Browser request từ domain không phải bloxstock.pages.dev → 403
+Lớp 2 — User-Agent block
+curl, python, wget, scrapy, axios... → 403
+Lớp 3 — No Origin + No Referer
+Script gọi thẳng API không qua browser → 403
+Lớp 4 — Health token
+/health chỉ cho qua khi có đúng token

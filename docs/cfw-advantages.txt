@@ -1,0 +1,30 @@
+CFW (Cloudflare Workers) — Lợi thế khi dùng cho Crawling
+==========================================================
+
+STEALTH
+-------
+- IP uy tín cao, Cloudflare ASN thường được whitelist ở hầu hết mọi site
+- TLS fingerprint sạch, khó phân biệt với browser thật ở layer network
+- HTTP/2 mặc định như browser thật, không giống script/VPS thông thường
+- Jitter tự nhiên do edge routing phân tán, timing không đều tăm tắp như bot VPS cố định
+- Pool IP lớn, không cố định, khó bị rate-limit theo IP
+- Crawl các site chạy trên Cloudflare gần như không bị block vì block CFW = tự block user thật
+
+RELIABILITY
+-----------
+- Cron tích hợp sẵn (Scheduled Workers), không bao giờ missed dù server reboot
+- Uptime 100% không cần quản lý infrastructure
+- KV storage chạy gần edge, đọc/ghi nhanh, không round-trip về database xa
+- Fallback logic hoạt động ổn định, không phụ thuộc môi trường bên ngoài
+
+OPS
+---
+- Không cần quản lý server, không lo IP bị burn hay blacklist
+- Free tier đủ dùng cho use case crawl định kỳ (100,000 requests/ngày)
+- Deploy nhanh, rollback dễ qua Cloudflare Dashboard hoặc Wrangler CLI
+- Secrets/Env vars quản lý tập trung qua Dashboard, không lộ trong code
+
+KẾT LUẬN
+---------
+Với use case crawl định kỳ (cron), lưu KV, fallback đa nguồn —
+CFW là lựa chọn gần như tối ưu về cả stealth, reliability lẫn chi phí vận hành.
