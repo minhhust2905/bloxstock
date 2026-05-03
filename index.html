@@ -1099,7 +1099,6 @@
             border-radius: 14px;
             padding: 1.2rem;
             transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
-            overflow: hidden;
         }
 
         /* Left accent bar theo rarity (Vẫn giữ vì nó quá đẹp và hữu dụng) */
@@ -1108,6 +1107,7 @@
             position: absolute;
             left: 0; top: 0; bottom: 0;
             width: 4px;
+            border-radius: 14px 0 0 14px; /* Bo góc riêng cho thanh màu vì đã bỏ overflow:hidden */
             background: var(--accent-color, rgba(255, 255, 255, 0.1));
             opacity: 0.6;
             transition: opacity 0.2s, width 0.2s;
@@ -1645,9 +1645,8 @@
                 <a href="privacy.html">Privacy Policy</a> ·
                 <a href="terms.html">Terms of Service</a>
             </p>
-            <p style="font-size: 0.65rem; opacity: 0.6;">BloxStock is a fan-made tool, not affiliated with Gamer Robot
-                Inc. or Roblox Corporation. Historical stock data and appearance probabilities are sourced from the <strong>Blox Fruits Wiki</strong> under CC-BY-SA license. All game assets belong to their respective owners.</p>
-            <p style="margin-top: 1rem;">© 2026 BloxStock Tracker · Built for the community</p>
+            <p style="font-size: 0.65rem; opacity: 0.6;">BloxStock is an independent analytical tool built for the community. Not affiliated with Gamer Robot Inc. or Roblox Corporation. All game assets belong to their respective owners.</p>
+            <p style="margin-top: 1rem;">© 2026 BloxStock Tracker · Synchronizing the High Seas</p>
         </div>
     </footer>
 

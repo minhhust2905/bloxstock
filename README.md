@@ -39,7 +39,7 @@
 ## ⚖️ Pháp lý & Bản quyền (Legal)
 
 - **BloxStock** là một dự án fan-made, hoàn toàn độc lập và không liên quan đến **Roblox Corporation** hay **Gamer Robot Inc.**
-- Dữ liệu được đồng bộ hóa dựa trên các hồ sơ công khai (Wiki) dưới hình thức **Sử dụng hợp lý (Fair Use)**.
+- Dữ liệu được đồng bộ hóa dựa trên các hồ sơ công khai và mô hình phân tích thời gian thực dưới hình thức **Sử dụng hợp lý (Fair Use)**.
 - Mọi tài sản hình ảnh và tên gọi trong game thuộc về chủ sở hữu bản quyền tương ứng.
 
 ---
