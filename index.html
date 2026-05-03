@@ -1097,8 +1097,53 @@
             top: 10px;
             bottom: 0;
             width: 2px;
-            background: var(--border);
-            z-index: 0;
+            background: linear-gradient(180deg, var(--mythical) 0%, rgba(168, 85, 247, 0.1) 100%);
+            border-radius: 2px;
+        }
+
+        .history-node {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .history-node::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 18px;
+            width: 16px;
+            height: 16px;
+            background: var(--card-bg);
+            border: 3px solid var(--mythical);
+            border-radius: 50%;
+            z-index: 2;
+            box-shadow: 0 0 10px var(--mythical), inset 0 0 5px var(--mythical);
+            transition: all 0.3s ease;
+        }
+
+        /* Hiệu ứng pulse cho node đầu tiên */
+        .history-node:first-child::after {
+            content: '';
+            position: absolute;
+            left: -4px;
+            top: 14px;
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--mythical);
+            border-radius: 50%;
+            animation: nodePulse 2s infinite;
+            z-index: 1;
+        }
+
+        @keyframes nodePulse {
+            0% { transform: scale(0.8); opacity: 1; }
+            100% { transform: scale(1.8); opacity: 0; }
+        }
+
+        .history-node:hover::before {
+            transform: scale(1.2);
+            box-shadow: 0 0 20px var(--mythical);
+            background: var(--mythical);
         }
 
         .timeline-item {
