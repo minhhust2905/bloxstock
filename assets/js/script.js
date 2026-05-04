@@ -596,8 +596,8 @@ function renderHistory() {
     // 3. RENDER 100 ITEM ĐÃ XỬ LÝ
     processedItems.slice(0, 100).forEach(entry => {
         const d = entry._displayDate;
-        const timeStr = d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' });
-        const dateStr = d.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', timeZone: 'UTC' });
+        const timeStr = d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+        const dateStr = d.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' });
         const relative = timeAgo(new Date(entry.updated)); // Time ago vẫn tính theo thời gian cào thực tế cho chính xác
 
         // Chuẩn bị danh sách trái cây hiển thị (đã lọc Rarity)
@@ -653,7 +653,7 @@ function renderHistory() {
         item.innerHTML = `
             <div class="timeline-content">
                 <div class="timeline-time">
-                    🕒 ${timeStr} <span style="font-size:0.6rem;opacity:0.4;margin-left:1px">UTC</span> <span class="timeline-time-sep"></span> ${dateStr} <span style="opacity:0.6;margin-left:4px">(${relative})</span>
+                    🕒 ${timeStr} <span class="timeline-time-sep"></span> ${dateStr} <span style="opacity:0.6;margin-left:4px">(${relative})</span>
                 </div>
                 <div class="timeline-cols">
                     ${normalColHtml}
