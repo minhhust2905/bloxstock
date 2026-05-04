@@ -72,8 +72,7 @@ Tổng: ~2 request/user/reset
 CũMớiRequest/user/reset~13~2Request đến Gamersberg2/reset2-7/resetClient code200 dòng phức tạp~50 dòng đơn giảnBug proneCaoThấpTimestamp lừa clientCóKhôngCập nhật nhanh nhất~68s sau reset~5 phút sau reset
 Trade-off duy nhất: worst case chậm hơn 5 phút so với fast poll 68s. Nhưng đổi lại ít bug hơn rất nhiều 👍
 
-NEW ! 
-
+Cách chặn việc bị crawling 
 3 lớp:
 Lớp 1 — Origin check
 Browser request từ domain không phải bloxstock.pages.dev → 403
@@ -83,3 +82,37 @@ Lớp 3 — No Origin + No Referer
 Script gọi thẳng API không qua browser → 403
 Lớp 4 — Health token
 /health chỉ cho qua khi có đúng token
+
+NEW ! 
+BROWSER_HEADERS thành array + helper function, thêm zstd:
+js// ── Stealth headers (giả browser thật) ──────────────────────
+const UA_POOL = [
+  { ua: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36', ch: '"Chromium";v="147", "Google Chrome";v="147", "Not-A.Brand";v="8"', platform: '"Windows"' },
+  { ua: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36', ch: '"Chromium";v="146", "Google Chrome";v="146", "Not-A.Brand";v="8"', platform: '"Windows"' },
+  { ua: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36', ch: '"Chromium";v="147", "Google Chrome";v="147", "Not-A.Brand";v="8"', platform: '"macOS"' },
+]
+
+function getBrowserHeaders() {
+  const pick = UA_POOL[Math.floor(Math.random() * UA_POOL.length)]
+  return {
+    'User-Agent':         pick.ua,
+    'Accept-Language':    'en-US,en;q=0.9',
+    'Accept-Encoding':    'gzip, deflate, br, zstd',
+    'Sec-Ch-Ua':          pick.ch,
+    'Sec-Ch-Ua-Mobile':   '?0',
+    'Sec-Ch-Ua-Platform': pick.platform,
+  }
+}
+Sau đó trong fetchGamersberg và fetchFruityBlox, đổi ...BROWSER_HEADERS thành ...getBrowserHeaders():
+js// fetchGamersberg
+const headers = {
+  ...getBrowserHeaders(),
+  ...
+}
+
+// fetchFruityBlox
+const headers = {
+  ...getBrowserHeaders(),
+  ...
+}
+3 chỗ cần sửa, không có gì khác thay đổi.

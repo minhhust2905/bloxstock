@@ -816,3 +816,36 @@ if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW registration failed:', err));
     });
 }
+// ─── OFFLINE / ONLINE HANDLING ───
+(function () {
+    const banner = document.createElement('div');
+    banner.id = 'offline-banner';
+    banner.innerHTML = `
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;opacity:0.7">
+            <circle cx="7" cy="7" r="6.25" stroke="currentColor" stroke-width="1.25"/>
+            <line x1="7" y1="4" x2="7" y2="7.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/>
+            <circle cx="7" cy="10" r="0.7" fill="currentColor"/>
+        </svg>
+        <span>Không có kết nối mạng — đang hiển thị dữ liệu cache</span>
+    `;
+    banner.style.cssText = 'position:fixed;bottom:1rem;left:50%;transform:translateX(-50%) translateY(120%);z-index:9999;background:var(--surface,#1e1e1e);color:#ccc;border:0.5px solid rgba(255,255,255,0.12);border-radius:8px;padding:0.55rem 1rem;font-size:0.82rem;gap:8px;display:flex;align-items:center;white-space:nowrap;opacity:0;transition:opacity 0.3s,transform 0.35s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 4px 16px rgba(0,0,0,0.2);';
+    document.body.appendChild(banner);
+
+    function show() {
+        banner.style.transform = 'translateX(-50%) translateY(120%)';
+        banner.style.opacity = '0';
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+            banner.style.transform = 'translateX(-50%) translateY(0)';
+            banner.style.opacity = '1';
+        }));
+    }
+    function hide() {
+        banner.style.transform = 'translateX(-50%) translateY(120%)';
+        banner.style.opacity = '0';
+    }
+
+    window.addEventListener('offline', show);
+    window.addEventListener('online', () => { hide(); loadStock(); });
+
+    if (!navigator.onLine) show();
+})();
